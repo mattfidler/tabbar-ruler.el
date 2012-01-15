@@ -5,10 +5,10 @@
 ;; Author: Matthew Fidler, Nathaniel Cunningham
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
-;; Version: 0.3
-;; Last-Updated: Sat Jan 14 21:45:37 2012 (-0600)
+;; Version: 0.4
+;; Last-Updated: Sat Jan 14 21:59:21 2012 (-0600)
 ;;           By: Matthew L. Fidler
-;;     Update #: 642
+;;     Update #: 649
 ;; URL:
 ;; Keywords: Tabbar, Ruler Mode, Menu, Tool Bar.
 ;; Compatibility: Windows Emacs 23.x
@@ -39,6 +39,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 14-Jan-2012    Matthew L. Fidler  
+;;    Last-Updated: Sat Jan 14 21:58:51 2012 (-0600) #648 (Matthew L. Fidler)
+;;    Added more commands that trigger the ruler.
 ;; 14-Jan-2012    Matthew L. Fidler  
 ;;    Last-Updated: Sat Jan 14 21:44:32 2012 (-0600) #641 (Matthew L. Fidler)
 ;;    Added more ruler commands.   It works a bit better
@@ -622,8 +625,24 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
   )
 (add-hook 'find-file-hook (lambda() (interactive) (tabbar-ruler-tabbar-ruler-fight 't)))
 (defcustom tabbar-ruler-ruler-display-commands '(ac-trigger-commands
-                                       esn-upcase-char-self-insert
+                                                 esn-upcase-char-self-insert
                                        esn-magic-$
+                                       right-char
+                                       left-char
+                                       previous-line
+                                       next-line
+                                       backward-paragraph
+                                       forward-paragraph
+                                       cua-scroll-down
+                                       cua-scroll-up
+                                       cua-paste
+                                       cua-paste-pop
+                                       autopair-newline
+                                       autopair-insert-opening
+                                       autopair-skip-close-maybe
+                                       autopair-backspace
+                                       backward-delete-char-untabify
+                                       delete-backward-char
                                        self-insert-command)
   "* Ruler display commands."
   :group 'tabbar-ruler
@@ -765,7 +784,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
               (tool-bar-mode -1)
               (setq tabbar-ruler-toolbar-off 't))))))
     (setq tabbar-ruler-movement-timer (run-with-timer
-                             0.5
+                             0.01
                              nil
                              'tabbar-ruler-mouse-movement))))
 (tabbar-ruler-mouse-movement)
