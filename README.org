@@ -1,0 +1,10 @@
+#+TITLE: Tabbar Ruler
+#+AUTHOR: Matthew L. Fidler
+* Introduction
+Tabbar ruler is an emacs package that allows both the tabbar and the
+ruler to be used together.  In addition it allows auto-hiding of the
+menu-bar and tool-bar.
+
+
+* Known issues
+the left arrow is text instead of an image.
