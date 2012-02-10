@@ -6,9 +6,9 @@
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
 ;; Version: 0.4
-;; Last-Updated: Sat Jan 14 21:59:21 2012 (-0600)
+;; Last-Updated: Thu Feb  9 19:18:54 2012 (-0600)
 ;;           By: Matthew L. Fidler
-;;     Update #: 649
+;;     Update #: 652
 ;; URL:
 ;; Keywords: Tabbar, Ruler Mode, Menu, Tool Bar.
 ;; Compatibility: Windows Emacs 23.x
@@ -39,6 +39,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 9-Feb-2012    Matthew L. Fidler  
+;;    Last-Updated: Thu Feb  9 19:18:21 2012 (-0600) #651 (Matthew L. Fidler)
+;;    Will not change the menu bar in a Mac.  Its always there.
 ;; 14-Jan-2012    Matthew L. Fidler  
 ;;    Last-Updated: Sat Jan 14 21:58:51 2012 (-0600) #648 (Matthew L. Fidler)
 ;;    Added more commands that trigger the ruler.
@@ -667,7 +670,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                 )
               (when tabbar-ruler-popup-menu
                 (unless tabbar-ruler-menu-off
-                  (menu-bar-mode -1)
+                  (unless (eq system-type 'darwin)
+		    (menu-bar-mode -1))
                   (setq tabbar-ruler-menu-off 't)
                   )
                 )
@@ -769,7 +773,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
             (progn
               (when tabbar-ruler-popup-menu
                 (when tabbar-ruler-menu-off
-                  (menu-bar-mode 1)
+                  (unless (eq system-type 'darwin)
+		    (menu-bar-mode 1))
                   (setq tabbar-ruler-menu-off nil)))
               (when tabbar-ruler-popup-toolbar
                 (when tabbar-ruler-toolbar-off
@@ -777,7 +782,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                   (setq tabbar-ruler-toolbar-off nil))))
           (when tabbar-ruler-popup-menu
             (unless tabbar-ruler-menu-off
-              (menu-bar-mode -1)
+              (unless (eq system-type 'darwin)
+		(menu-bar-mode -1))
               (setq tabbar-ruler-menu-off 't)))
           (when tabbar-ruler-popup-toolbar
             (unless tabbar-ruler-toolbar-off
