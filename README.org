@@ -1,10 +1,213 @@
 #+TITLE: Tabbar Ruler
 #+AUTHOR: Matthew L. Fidler
+* Library Information
+ /tabbar-ruler.el/ --- Setup tabbar to look pretty...
+
+ - Filename :: [[file:tabbar-ruler.el][tabbar-ruler.el]]
+ - Description :: Changes tabbar setup to be similar to Aquaemacs.
+ - Author :: Matthew Fidler, Nathaniel Cunningham
+ - Maintainer :: Matthew L. Fidler
+ - Created :: Mon Oct 18 17:06:07 2010 (-0500)
+ - Version :: 0.6
+ - Last-Updated :: Thu Mar  1 09:02:56 2012 (-0600)
+ -           By :: Matthew L. Fidler
+ -     Update # :: 659
+ - URL :: http://github.com/mlf176f2/tabbar-ruler.el
+ - Keywords :: Tabbar, Ruler Mode, Menu, Tool Bar.
+ - Compatibility :: Windows Emacs 23.x
+ - Package-Requires :: ((tabbar "2.0.1"))
+
 * Introduction
 Tabbar ruler is an emacs package that allows both the tabbar and the
 ruler to be used together.  In addition it allows auto-hiding of the
 menu-bar and tool-bar.
 
 
+Tabbar appearance based on reverse engineering Aquaemacs code and
+changing to my preferences, and Emacs Wiki.
+
+Tabbar/Ruler integration is new. Tabbar should be active on mouse
+move.  Ruler should be active on self-insert commands.
+
+Also allows auto-hiding of toolbar and menu.
+
+To use this, put the library in your load path and use
+
+#+BEGIN_SRC emacs-lisp
+  (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+  (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
+  (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
+  (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
+  
+  (require 'tabbar-ruler)
+  
+#+END_SRC
+
+
 * Known issues
 the left arrow is text instead of an image.
+* Functions
+** Interactive Functions
+
+*** tabbar-context-menu
+=(tabbar-context-menu)=
+
+Pop up a context menu.
+
+*** tabbar-popup-bz2
+=(tabbar-popup-bz2)=
+
+Bzip file
+
+*** tabbar-popup-close
+=(tabbar-popup-close)=
+
+Tab-bar pop up close
+
+*** tabbar-popup-close-but
+=(tabbar-popup-close-but)=
+
+Tab-bar close all BUT this buffer
+
+*** tabbar-popup-decompress
+=(tabbar-popup-decompress)=
+
+Decompress file
+
+*** tabbar-popup-delete
+=(tabbar-popup-delete)=
+
+Tab-bar delete file
+
+*** tabbar-popup-gz
+=(tabbar-popup-gz &optional EXT ERR)=
+
+Gzips the file
+
+*** tabbar-popup-print
+=(tabbar-popup-print)=
+
+Print Buffer
+
+*** tabbar-popup-rename
+=(tabbar-popup-rename)=
+
+Tab-bar rename
+
+*** tabbar-popup-save-as
+=(tabbar-popup-save-as)=
+
+Tab-bar save as
+
+*** tabbar-ruler-mouse-movement
+=(tabbar-ruler-mouse-movement)=
+
+ - Mouse Movement function
+
+*** tabbar-select-tab-callback
+=(tabbar-select-tab-callback EVENT)=
+
+Handle a mouse EVENT on a tab.
+Pass mouse click events on a tab to =tabbar-click-on-tab=.
+
+** Internal Functions
+
+*** tabbar-hex-color
+=(tabbar-hex-color COLOR)=
+
+Gets the hexadecimal value of a color
+
+*** tabbar-install-faces
+=(tabbar-install-faces &optional FRAME)=
+
+Installs faces for a frame.
+
+*** tabbar-popup-menu
+=(tabbar-popup-menu)=
+
+Keymap for pop-up menu.  Emacs only.
+
+*** tabbar-popup-remove-compression-ext
+=(tabbar-popup-remove-compression-ext FILE-NAME &optional
+NEW-COMPRESSION)=
+
+Removes compression extension, and possibly adds a new extension
+
+*** tabbar-ruler-image
+=(tabbar-ruler-image &key TYPE DISABLED COLOR)=
+
+Returns the scroll-images
+
+*** tabbar-ruler-tabbar-buffer-groups
+=(tabbar-ruler-tabbar-buffer-groups)=
+
+Return the list of group names the current buffer belongs to.
+Return a list of one element based on major mode.
+
+*** tabbar-ruler-tabbar-buffer-list
+=(tabbar-ruler-tabbar-buffer-list)=
+
+Return the list of buffers to show in tabs.
+Exclude buffers whose name starts with a space or *, when they are not
+visiting a file.  The current buffer is always included.
+
+*** tabbar-ruler-tabbar-ruler-fight
+=(tabbar-ruler-tabbar-ruler-fight &optional INITIALIZE)=
+
+ - Defines the fighting behavior of the tabbar-ruler ruler and tabbar.
+* Variables
+** Customizable Variables
+
+*** tabbar-ruler-do-not-switch-on-ruler-when-tabbar-is-on-y
+ - Minimum number of pixels to switch on ruler when tabbar is on.
+
+*** tabbar-ruler-excluded-buffers
+ - Excluded buffers in tabbar.
+
+*** tabbar-ruler-global-ruler
+ - Should tabbar-ruler have a global ruler?
+
+*** tabbar-ruler-global-tabbar
+ - Should tabbar-ruler have a global tabbar?
+
+*** tabbar-ruler-popup-menu
+ - Should tabbar-ruler have a popup menu.  As mouse moves toward top of window, the menu pops up.
+
+*** tabbar-ruler-popup-menu-min-y
+ - Minimum number of pixels from the top before a menu/toolbar pops up.
+
+*** tabbar-ruler-popup-menu-min-y-leave
+ - Minimum number of pixels form the top before a menu/toolbar disappears.
+
+*** tabbar-ruler-popup-toolbar
+ - Should tabbar-ruler have a popup toolbar.  As mouse moves toward top of window, the toolbar pops up.
+
+*** tabbar-ruler-ruler-display-commands
+ - Ruler display commands.
+
+** Internal Variables
+
+*** tabbar-close-tab-function
+Function to call to close a tabbar tab.  Passed a single argument, the tab
+construct to be closed.
+
+*** tabbar-new-tab-function
+Function to call to create a new buffer in tabbar-mode.  Optional single
+argument is the MODE for the new buffer.
+* History
+
+ - 06-Dec-2012 ::  Now colors are based on loaded theme (from minibar). Also added bug-fix for setting tabbar colors every time a frame opens. Also added a bug fix for right-clicking a frame that is not associated with a buffer. 1-Mar-2012 Matthew L. Fidler Last-Updated: Thu Mar 1 08:38:09 2012 (-0600) #656 (Matthew L. Fidler) Will not change tool-bar-mode in Mac. It causes some funny things to happen. 9-Feb-2012 Matthew L. Fidler Last-Updated: Thu Feb 9 19:18:21 2012 (-0600) #651 (Matthew L. Fidler) Will not change the menu bar in a Mac. Its always there. (Matthew L. Fidler)
+ - 14-Jan-2012 ::  Added more commands that trigger the ruler. (Matthew L. Fidler)
+ - 14-Jan-2012 ::  Added more ruler commands. It works a bit better now. Additionally I have changed the ep- to tabbar-ruler-. (Matthew L. Fidler)
+ - 14-Jan-2012 ::  Changed EmacsPortable to tabbar-ruler (Matthew L. Fidler)
+ - 08-Feb-2011 ::  Added ELPA tags.  (Matthew L. Fidler)
+ - 08-Feb-2011 ::  Removed xpm dependencies. Now no images are required, they are built by the library. (Matthew L. Fidler)
+ - 04-Dec-2010 ::  Added context menu. (Matthew L. Fidler)
+ - 01-Dec-2010 ::  Added scratch buffers to list. (Matthew L. Fidler)
+ - 04-Nov-2010 ::  Made tabbar mode default. (us041375)
+ - 02-Nov-2010 ::  Make post-command-hook handle errors gracefully. (Matthew L. Fidler)
+ - 20-Oct-2010 ::  Changed behavior when outside the window to assume the last known mouse position. This fixes the two problems below.  (us041375)
+ - 20-Oct-2010 ::  As it turns out when the toolbar is hidden when the mouse is outside of the emacs window, it also hides when navigating the menu. Switching behavior back.  (us041375)
+ - 20-Oct-2010 ::  Made popup menu and toolbar be hidden when mouse is oustide of emacs window. (us041375)
+ - 20-Oct-2010 ::  Changed to popup ruler-mode if tabbar and ruler are not displayed. (us041375)
+ - 19-Oct-2010 ::  Changed tabbar, menu, toolbar and ruler variables to be buffer or frame local.  (Matthew L. Fidler)

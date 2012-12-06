@@ -1,0 +1,6 @@
+(:name tabbar-ruler
+ :description "tabbar-ruler"
+ :depends (tabbar)
+ :website "https://github.com/mlf176f2/tabbar-ruler.el"
+ :type git
+ :url "https://github.com/mlf176f2/tabbar-ruler.el.git")
