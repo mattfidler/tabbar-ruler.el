@@ -27,7 +27,7 @@ Matthew L. Fidler ## Library Information @emph{tabbar-ruler.el} --- Setup tabbar
 @item
 @strong{Created} -- Mon Oct 18 17:06:07 2010 (-0500)
 @item
-@strong{Version} -- 0.6
+@strong{Version} -- 0.7
 @item
 @strong{Last-Updated} -- Thu Mar 1 09:02:56 2012 (-0600)
 @item
@@ -70,6 +70,8 @@ To use this@comma{} put the library in your load path and use
 the left arrow is text instead of an image. ## History
 
 @itemize
+@item
+@strong{07-Dec-2012} -- Now works with Helm. Should fix issue #1 (Matthew L. Fidler)
 @item
 @strong{06-Dec-2012} -- Now colors are based on loaded theme (from minibar). Also added bug-fix for setting tabbar colors every time a frame opens. Also added a bug fix for right-clicking a frame that is not associated with a buffer. 1-Mar-2012 Matthew L. Fidler Last-Updated: Thu Mar 1 08:38:09 2012 (-0600) #656 (Matthew L. Fidler) Will not change tool-bar-mode in Mac. It causes some funny things to happen. 9-Feb-2012 Matthew L. Fidler Last-Updated: Thu Feb 9 19:18:21 2012 (-0600) #651 (Matthew L. Fidler) Will not change the menu bar in a Mac. Its always there. (Matthew L. Fidler)
 @item
