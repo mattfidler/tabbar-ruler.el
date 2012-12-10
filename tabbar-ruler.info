@@ -1,0 +1,170 @@
+This is tabbar-ruler.info, produced by makeinfo version 4.13 from
+tabbar-ruler.texi.
+
+INFO-DIR-SECTION Emacs lisp libraries
+START-INFO-DIR-ENTRY
+* tabbar-ruler: (tabbar-ruler).     Changes tabbar setup to be similar to Aquaemacs.
+END-INFO-DIR-ENTRY
+
+
+File: tabbar-ruler.info,  Node: Top,  Next: Tabbar Ruler,  Up: (dir)
+
+Top
+***
+
+* Menu:
+
+* Tabbar Ruler::
+
+
+File: tabbar-ruler.info,  Node: Tabbar Ruler,  Prev: Top,  Up: Top
+
+1 Tabbar Ruler
+**************
+
+Matthew L. Fidler ## Library Information _tabbar-ruler.el_ -- Setup
+tabbar to look pretty...
+
+   * *Filename* - tabbar-ruler.el
+
+   * *Description* - Changes tabbar setup to be similar to Aquaemacs.
+
+   * *Author* - Matthew Fidler, Nathaniel Cunningham
+
+   * *Maintainer* - Matthew L. Fidler
+
+   * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
+
+   * *Version* - 0.10
+
+   * *Last-Updated* - Thu Mar 1 09:02:56 2012 (-0600)
+
+   * *By* - Matthew L. Fidler
+
+   * *Update #* - 659
+
+   * *URL* - http:__github.com_mlf176f2_tabbar-ruler.el
+
+   * *Keywords* - Tabbar, Ruler Mode, Menu, Tool Bar.
+
+   * *Compatibility* - Windows Emacs 23.x
+
+   * *Package-Requires* - ((tabbar "2.0.1"))
+
+* Menu:
+
+* Introduction::
+* Known issues::
+
+
+File: tabbar-ruler.info,  Node: Introduction,  Next: Known issues,  Up: Tabbar Ruler
+
+1.1 Introduction
+================
+
+Tabbar ruler is an emacs package that allows both the tabbar and the
+ruler to be used together. In addition it allows auto-hiding of the
+menu-bar and tool-bar.
+
+Tabbar appearance based on reverse engineering Aquaemacs code and
+changing to my preferences, and Emacs Wiki.
+
+Tabbar/Ruler integration is new. Tabbar should be active on mouse move.
+Ruler should be active on self-insert commands.
+
+Also allows auto-hiding of toolbar and menu.
+
+To use this, put the library in your load path and use
+
+(setq tabbar-ruler-global-tabbar 't) ; If you want tabbar (setq
+tabbar-ruler-global-ruler 't) ; if you want a global ruler (setq
+tabbar-ruler-popup-menu 't) ; If you want a popup menu. (setq
+tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
+
+(require 'tabbar-ruler)
+
+
+File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar Ruler
+
+1.2 Known issues
+================
+
+the left arrow is text instead of an image. ## History
+
+   * *10-Dec-2012* - Added package-menu-mode to the excluded
+     tabbar-ruler fight modes. (Matthew L. Fidler)
+
+   * *07-Dec-2012* - Will no longer take over editing of org source
+     blocks or info blocks. (Matthew L. Fidler)
+
+   * *07-Dec-2012* - Changed the order of checking so that helm will
+     work when you move a mouse. (Matthew L. Fidler)
+
+   * *07-Dec-2012* - Now works with Helm. Should fix issue #1 (Matthew
+     L. Fidler)
+
+   * *06-Dec-2012* - Now colors are based on loaded theme (from
+     minibar). Also added bug-fix for setting tabbar colors every time
+     a frame opens. Also added a bug fix for right-clicking a frame
+     that is not associated with a buffer. 1-Mar-2012 Matthew L. Fidler
+     Last-Updated: Thu Mar 1 08:38:09 2012 (-0600) #656 (Matthew L.
+     Fidler) Will not change tool-bar-mode in Mac. It causes some funny
+     things to happen. 9-Feb-2012 Matthew L. Fidler Last-Updated: Thu
+     Feb 9 19:18:21 2012 (-0600) #651 (Matthew L. Fidler) Will not
+     change the menu bar in a Mac. Its always there. (Matthew L. Fidler)
+
+   * *14-Jan-2012* - Added more commands that trigger the ruler.
+     (Matthew L. Fidler)
+
+   * *14-Jan-2012* - Added more ruler commands. It works a bit better
+     now. Additionally I have changed the ep- to tabbar-ruler-.
+     (Matthew L. Fidler)
+
+   * *14-Jan-2012* - Changed EmacsPortable to tabbar-ruler (Matthew L.
+     Fidler)
+
+   * *08-Feb-2011* - Added ELPA tags. (Matthew L. Fidler)
+
+   * *08-Feb-2011* - Removed xpm dependencies. Now no images are
+     required, they are built by the library. (Matthew L. Fidler)
+
+   * *04-Dec-2010* - Added context menu. (Matthew L. Fidler)
+
+   * *01-Dec-2010* - Added scratch buffers to list. (Matthew L. Fidler)
+
+   * *04-Nov-2010* - Made tabbar mode default. (us041375)
+
+   * *02-Nov-2010* - Make post-command-hook handle errors gracefully.
+     (Matthew L. Fidler)
+
+   * *20-Oct-2010* - Changed behavior when outside the window to assume
+     the last known mouse position. This fixes the two problems below.
+     (us041375)
+
+   * *20-Oct-2010* - As it turns out when the toolbar is hidden when
+     the mouse is outside of the emacs window, it also hides when
+     navigating the menu. Switching behavior back. (us041375)
+
+   * *20-Oct-2010* - Made popup menu and toolbar be hidden when mouse
+     is oustide of emacs window. (us041375)
+
+   * *20-Oct-2010* - Changed to popup ruler-mode if tabbar and ruler
+     are not displayed. (us041375)
+
+   * *19-Oct-2010* - Changed tabbar, menu, toolbar and ruler variables
+     to be buffer or frame local. (Matthew L. Fidler)
+
+
+
+Tag Table:
+Node: Top250
+Node: Tabbar Ruler358
+Node: Introduction1180
+Node: Known issues2076
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:
