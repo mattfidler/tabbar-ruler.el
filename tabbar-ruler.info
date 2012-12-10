@@ -91,6 +91,9 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 
 the left arrow is text instead of an image. ## History
 
+   * *10-Dec-2012* - Took out a statement that may fix the
+     left-scrolling bug? (Matthew L. Fidler)
+
    * *10-Dec-2012* - Added package-menu-mode to the excluded
      tabbar-ruler fight modes. (Matthew L. Fidler)
 
