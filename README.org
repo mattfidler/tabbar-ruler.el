@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.10
+ - Version :: 0.11
  - Last-Updated :: Thu Mar  1 09:02:56 2012 (-0600)
  -           By :: Matthew L. Fidler
  -     Update # :: 659
@@ -53,6 +53,11 @@ the left arrow is text instead of an image.
 =(tabbar-context-menu)=
 
 Pop up a context menu.
+
+*** tabbar-install-faces
+=(tabbar-install-faces &optional FRAME)=
+
+Installs faces for a frame.
 
 *** tabbar-popup-bz2
 =(tabbar-popup-bz2)=
@@ -116,11 +121,6 @@ Pass mouse click events on a tab to =tabbar-click-on-tab=.
 =(tabbar-hex-color COLOR)=
 
 Gets the hexadecimal value of a color
-
-*** tabbar-install-faces
-=(tabbar-install-faces &optional FRAME)=
-
-Installs faces for a frame.
 
 *** tabbar-popup-menu
 =(tabbar-popup-menu)=
@@ -199,6 +199,7 @@ Function to call to create a new buffer in tabbar-mode.  Optional single
 argument is the MODE for the new buffer.
 * History
 
+ - 13-Dec-2012 ::  Added Bug fix for coloring. Made the selected tab match the default color in the buffer. Everything else is grayed out. (Matthew L. Fidler)
  - 10-Dec-2012 ::  Took out a statement that may fix the left-scrolling bug? (Matthew L. Fidler)
  - 10-Dec-2012 ::  Added package-menu-mode to the excluded tabbar-ruler fight modes. (Matthew L. Fidler)
  - 07-Dec-2012 ::  Will no longer take over editing of org source blocks or info blocks. (Matthew L. Fidler)
