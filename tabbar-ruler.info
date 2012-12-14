@@ -91,6 +91,8 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 
 the left arrow is text instead of an image. ## History
 
+   * *14-Dec-2012* - Fancy tabs (Matthew L. Fidler)
+
    * *13-Dec-2012* - Added Bug fix for coloring. Made the selected tab
      match the default color in the buffer. Everything else is grayed
      out. (Matthew L. Fidler)
