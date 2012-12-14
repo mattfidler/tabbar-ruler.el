@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.11
+ - Version :: 0.12
  - Last-Updated :: Thu Mar  1 09:02:56 2012 (-0600)
  -           By :: Matthew L. Fidler
  -     Update # :: 659
@@ -219,6 +219,7 @@ Function to call to create a new buffer in tabbar-mode.  Optional single
 argument is the MODE for the new buffer.
 * History
 
+ - 14-Dec-2012 ::  Upload to Marmalade  (Matthew L. Fidler)
  - 14-Dec-2012 ::  Fancy tabs (Matthew L. Fidler)
  - 13-Dec-2012 ::  Added Bug fix for coloring. Made the selected tab match the default color in the buffer. Everything else is grayed out. (Matthew L. Fidler)
  - 10-Dec-2012 ::  Took out a statement that may fix the left-scrolling bug? (Matthew L. Fidler)
