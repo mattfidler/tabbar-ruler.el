@@ -35,7 +35,7 @@ tabbar to look pretty...
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.13
+   * *Version* - 0.14
 
    * *Last-Updated* - Thu Mar 1 09:02:56 2012 (-0600)
 
@@ -90,6 +90,9 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 ================
 
 the left arrow is text instead of an image. ## History
+
+   * *14-Dec-2012* - Fixed tabbar ruler so that it loads cold. (Matthew
+     L. Fidler)
 
    * *14-Dec-2012* - Memoized the tabbar images to speed things up
      (Matthew L. Fidler)
