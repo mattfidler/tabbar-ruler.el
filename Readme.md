@@ -8,7 +8,7 @@
 - __Author__ --  Matthew Fidler, Nathaniel Cunningham
 - __Maintainer__ --  Matthew L. Fidler
 - __Created__ --  Mon Oct 18 17:06:07 2010 (-0500)
-- __Version__ --  0.15
+- __Version__ --  0.16
 - __Last-Updated__ --  Sat Dec 15 15:44:34 2012 (+0800)
 - __By__ --  Matthew L. Fidler
 - __Update #__ --  663
@@ -48,6 +48,7 @@ To use this, put the library in your load path and use
 the left arrow is text instead of an image.
 ## History
 
+- __15-Dec-2012__ --   Made sure that the tabbr-ruler-separator-image is at least 17 pixels high (Matthew L. Fidler)
 - __15-Dec-2012__ --   Attempt to fix another bug on load (Matthew L. Fidler)
 - __14-Dec-2012__ --   Fixed tabbar ruler so that it loads cold. (Matthew L. Fidler)
 - __14-Dec-2012__ --   Memoized the tabbar images to speed things up (Matthew L. Fidler)
