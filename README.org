@@ -8,10 +8,10 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.14
- - Last-Updated :: Thu Mar  1 09:02:56 2012 (-0600)
+ - Version :: 0.15
+ - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
  -           By :: Matthew L. Fidler
- -     Update # :: 659
+ -     Update # :: 663
  - URL :: http://github.com/mlf176f2/tabbar-ruler.el
  - Keywords :: Tabbar, Ruler Mode, Menu, Tool Bar.
  - Compatibility :: Windows Emacs 23.x
@@ -49,93 +49,17 @@ the left arrow is text instead of an image.
 * Functions
 ** Interactive Functions
 
-*** tabbar-context-menu
-tabbar-context-menu is an interactive Lisp function.
-
-=(tabbar-context-menu)=
-
-Pop up a context menu.
-
 *** tabbar-install-faces
-tabbar-install-faces is an interactive Lisp function.
-
 =(tabbar-install-faces &optional FRAME)=
 
 Installs faces for a frame.
 
-*** tabbar-popup-bz2
-tabbar-popup-bz2 is an interactive Lisp function.
-
-=(tabbar-popup-bz2)=
-
-Bzip file
-
-*** tabbar-popup-close
-tabbar-popup-close is an interactive Lisp function.
-
-=(tabbar-popup-close)=
-
-Tab-bar pop up close
-
-*** tabbar-popup-close-but
-tabbar-popup-close-but is an interactive Lisp function.
-
-=(tabbar-popup-close-but)=
-
-Tab-bar close all BUT this buffer
-
-*** tabbar-popup-decompress
-tabbar-popup-decompress is an interactive Lisp function.
-
-=(tabbar-popup-decompress)=
-
-Decompress file
-
-*** tabbar-popup-delete
-tabbar-popup-delete is an interactive Lisp function.
-
-=(tabbar-popup-delete)=
-
-Tab-bar delete file
-
-*** tabbar-popup-gz
-tabbar-popup-gz is an interactive Lisp function.
-
-=(tabbar-popup-gz &optional EXT ERR)=
-
-Gzips the file
-
-*** tabbar-popup-print
-tabbar-popup-print is an interactive Lisp function.
-
-=(tabbar-popup-print)=
-
-Print Buffer
-
-*** tabbar-popup-rename
-tabbar-popup-rename is an interactive Lisp function.
-
-=(tabbar-popup-rename)=
-
-Tab-bar rename
-
-*** tabbar-popup-save-as
-tabbar-popup-save-as is an interactive Lisp function.
-
-=(tabbar-popup-save-as)=
-
-Tab-bar save as
-
 *** tabbar-reset
-tabbar-reset is an interactive Lisp function.
-
 =(tabbar-reset)=
 
 Reset memoized functions.
 
 *** tabbar-ruler-mouse-movement
-tabbar-ruler-mouse-movement is an interactive Lisp function.
-
 =(tabbar-ruler-mouse-movement)=
 
  - Mouse Movement function
@@ -149,8 +73,6 @@ Pass mouse click events on a tab to =tabbar-click-on-tab=.
 ** Internal Functions
 
 *** tabbar-create-or-get-tabbar-cache
-tabbar-create-or-get-tabbar-cache is a Lisp function.
-
 =(tabbar-create-or-get-tabbar-cache)=
 
 Return a frame-local hash table that acts as a memoization
@@ -158,15 +80,11 @@ cache for tabbar. Create one if the frame doesn't have one
 yet.
 
 *** tabbar-hex-color
-tabbar-hex-color is a Lisp function.
-
 =(tabbar-hex-color COLOR)=
 
 Gets the hexadecimal value of a color
 
 *** tabbar-memoize
-tabbar-memoize is a Lisp function.
-
 =(tabbar-memoize FUNC)=
 
 Memoize FUNC.
@@ -174,32 +92,13 @@ If argument is a symbol then install the tabbar-memoized function over
 the original function.  Use frame-local memoization.
 
 *** tabbar-memoize-wrap-frame-local
-tabbar-memoize-wrap-frame-local is a Lisp function.
-
 =(tabbar-memoize-wrap-frame-local FUNC)=
 
 Return the tabbar-memoized version of FUNC.  The memoization cache is
 frame-local.
 
-*** tabbar-popup-menu
-tabbar-popup-menu is a Lisp function.
-
-=(tabbar-popup-menu)=
-
-Keymap for pop-up menu.  Emacs only.
-
-*** tabbar-popup-remove-compression-ext
-tabbar-popup-remove-compression-ext is a Lisp function.
-
-=(tabbar-popup-remove-compression-ext FILE-NAME &optional
-NEW-COMPRESSION)=
-
-Removes compression extension, and possibly adds a new extension
-
 *** tabbar-ruler-image
-tabbar-ruler-image is a Lisp function.
-
-=(tabbar-ruler-image &rest G36714)=
+=(tabbar-ruler-image &rest G5120)=
 
 Returns the scroll-images
 
@@ -207,9 +106,7 @@ Returns the scroll-images
 (tabbar-memoized function)
 
 *** tabbar-ruler-tab-separator-image
-tabbar-ruler-tab-separator-image is a Lisp function.
-
-=(tabbar-ruler-tab-separator-image &rest G36711)=
+=(tabbar-ruler-tab-separator-image &rest G5117)=
 
 Creates a Tabbar Ruler Separator Image.
 FACE1 is the face to the left
@@ -229,16 +126,12 @@ When FACE1 does not equal FACE2, this creates a selected separator
 (tabbar-memoized function)
 
 *** tabbar-ruler-tabbar-buffer-groups
-tabbar-ruler-tabbar-buffer-groups is a Lisp function.
-
 =(tabbar-ruler-tabbar-buffer-groups)=
 
 Return the list of group names the current buffer belongs to.
 Return a list of one element based on major mode.
 
 *** tabbar-ruler-tabbar-buffer-list
-tabbar-ruler-tabbar-buffer-list is a Lisp function.
-
 =(tabbar-ruler-tabbar-buffer-list)=
 
 Return the list of buffers to show in tabs.
@@ -246,8 +139,6 @@ Exclude buffers whose name starts with a space or *, when they are not
 visiting a file.  The current buffer is always included.
 
 *** tabbar-ruler-tabbar-ruler-fight
-tabbar-ruler-tabbar-ruler-fight is a Lisp function.
-
 =(tabbar-ruler-tabbar-ruler-fight &optional INITIALIZE)=
 
  - Defines the fighting behavior of the tabbar-ruler ruler and tabbar.
@@ -295,9 +186,10 @@ Function to call to create a new buffer in tabbar-mode.  Optional single
 argument is the MODE for the new buffer.
 * History
 
+ - 15-Dec-2012 ::  Attempt to fix another bug on load (Matthew L. Fidler)
  - 14-Dec-2012 ::  Fixed tabbar ruler so that it loads cold. (Matthew L. Fidler)
  - 14-Dec-2012 ::  Memoized the tabbar images to speed things up (Matthew L. Fidler)
- - 14-Dec-2012 ::  Upload to Marmalade  (Matthew L. Fidler)
+ - 14-Dec-2012 ::  Upload to Marmalade  (Mat==thew L. Fidler)
  - 14-Dec-2012 ::  Fancy tabs (Matthew L. Fidler)
  - 13-Dec-2012 ::  Added Bug fix for coloring. Made the selected tab match the default color in the buffer. Everything else is grayed out. (Matthew L. Fidler)
  - 10-Dec-2012 ::  Took out a statement that may fix the left-scrolling bug? (Matthew L. Fidler)
