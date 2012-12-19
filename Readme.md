@@ -1,5 +1,5 @@
-#  Tabbar Ruler
- Matthew L. Fidler
+#  Tabbar Ruler
+ Matthew L. Fidler
 ## Library Information
  _tabbar-ruler.el_ --- Setup tabbar to look pretty...
 
@@ -8,7 +8,7 @@
 - __Author__ --  Matthew Fidler, Nathaniel Cunningham
 - __Maintainer__ --  Matthew L. Fidler
 - __Created__ --  Mon Oct 18 17:06:07 2010 (-0500)
-- __Version__ --  0.16
+- __Version__ --  0.18
 - __Last-Updated__ --  Sat Dec 15 15:44:34 2012 (+0800)
 - __By__ --  Matthew L. Fidler
 - __Update #__ --  663
@@ -17,37 +17,38 @@
 - __Compatibility__ --  Windows Emacs 23.x
 - __Package-Requires__ --  ((tabbar "2.0.1"))
 
-## Introduction
-Tabbar ruler is an emacs package that allows both the tabbar and the
-ruler to be used together.  In addition it allows auto-hiding of the
-menu-bar and tool-bar.
+## Introduction
+Tabbar ruler is an emacs package that allows both the tabbar and the
+ruler to be used together.  In addition it allows auto-hiding of the
+menu-bar and tool-bar.
+
+
+Tabbar appearance based on reverse engineering Aquaemacs code and
+changing to my preferences, and Emacs Wiki.
+
+Tabbar/Ruler integration is new. Tabbar should be active on mouse
+move.  Ruler should be active on self-insert commands.
+
+Also allows auto-hiding of toolbar and menu.
+
+To use this, put the library in your load path and use
+
 
+  (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+  (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
+  (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
+  (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
+  
+  (require 'tabbar-ruler)
+  
 
-Tabbar appearance based on reverse engineering Aquaemacs code and
-changing to my preferences, and Emacs Wiki.
-
-Tabbar/Ruler integration is new. Tabbar should be active on mouse
-move.  Ruler should be active on self-insert commands.
-
-Also allows auto-hiding of toolbar and menu.
-
-To use this, put the library in your load path and use
-
-
-  (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
-  (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
-  (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
-  (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
-  
-  (require 'tabbar-ruler)
-  
-
-
-
-## Known issues
-the left arrow is text instead of an image.
+
+
+## Known issues
+the left arrow is text instead of an image.
 ## History
 
+- __19-Dec-2012__ --   Changed slope. Made the background color the default background color if unspecified. Made tabbar-hex-color return "None" if not defined (Matthew L. Fidler)
 - __15-Dec-2012__ --   Made sure that the tabbr-ruler-separator-image is at least 17 pixels high (Matthew L. Fidler)
 - __15-Dec-2012__ --   Attempt to fix another bug on load (Matthew L. Fidler)
 - __14-Dec-2012__ --   Fixed tabbar ruler so that it loads cold. (Matthew L. Fidler)
