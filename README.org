@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.19
+ - Version :: 0.21
  - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
  -           By :: Matthew L. Fidler
  -     Update # :: 663
@@ -49,10 +49,60 @@ the left arrow is text instead of an image.
 * Functions
 ** Interactive Functions
 
+*** tabbar-context-menu
+=(tabbar-context-menu)=
+
+Pop up a context menu.
+
 *** tabbar-install-faces
 =(tabbar-install-faces &optional FRAME)=
 
 Installs faces for a frame.
+
+*** tabbar-popup-bz2
+=(tabbar-popup-bz2)=
+
+Bzip file
+
+*** tabbar-popup-close
+=(tabbar-popup-close)=
+
+Tab-bar pop up close
+
+*** tabbar-popup-close-but
+=(tabbar-popup-close-but)=
+
+Tab-bar close all BUT this buffer
+
+*** tabbar-popup-decompress
+=(tabbar-popup-decompress)=
+
+Decompress file
+
+*** tabbar-popup-delete
+=(tabbar-popup-delete)=
+
+Tab-bar delete file
+
+*** tabbar-popup-gz
+=(tabbar-popup-gz &optional EXT ERR)=
+
+Gzips the file
+
+*** tabbar-popup-print
+=(tabbar-popup-print)=
+
+Print Buffer
+
+*** tabbar-popup-rename
+=(tabbar-popup-rename)=
+
+Tab-bar rename
+
+*** tabbar-popup-save-as
+=(tabbar-popup-save-as)=
+
+Tab-bar save as
 
 *** tabbar-reset
 =(tabbar-reset)=
@@ -97,8 +147,19 @@ the original function.  Use frame-local memoization.
 Return the tabbar-memoized version of FUNC.  The memoization cache is
 frame-local.
 
+*** tabbar-popup-menu
+=(tabbar-popup-menu)=
+
+Keymap for pop-up menu.  Emacs only.
+
+*** tabbar-popup-remove-compression-ext
+=(tabbar-popup-remove-compression-ext FILE-NAME &optional
+NEW-COMPRESSION)=
+
+Removes compression extension, and possibly adds a new extension
+
 *** tabbar-ruler-image
-=(tabbar-ruler-image &rest G36426)=
+=(tabbar-ruler-image &rest G50114)=
 
 Returns the scroll-images
 
@@ -106,7 +167,7 @@ Returns the scroll-images
 (tabbar-memoized function)
 
 *** tabbar-ruler-tab-separator-image
-=(tabbar-ruler-tab-separator-image &rest G36423)=
+=(tabbar-ruler-tab-separator-image &rest G50111)=
 
 Creates a Tabbar Ruler Separator Image.
 FACE1 is the face to the left
@@ -186,6 +247,7 @@ Function to call to create a new buffer in tabbar-mode.  Optional single
 argument is the MODE for the new buffer.
 * History
 
+ - 19-Dec-2012 ::  Added back popup-menu (Matthew L. Fidler)
  - 19-Dec-2012 ::  Upload to marmalade (Matthew L. Fidler)
  - 19-Dec-2012 ::  Changed slope. Made the background color the default background color if unspecified. Made tabbar-hex-color return "None" if not defined (Matthew L. Fidler)
  - 15-Dec-2012 ::  Made sure that the tabbr-ruler-separator-image is at least 17 pixels high (Matthew L. Fidler)
