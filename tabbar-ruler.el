@@ -282,7 +282,7 @@ When FACE1 = FACE2, this creates a non-selected separator
 When FACE1 does not equal FACE2, this creates a selected separator
 "
   (let* ((h (or height (max 20 (frame-char-height))))
-         (m (or slope 2.5))
+         (m (or slope 2))
          (w (/ h m))
          (i h)
          x1 x2 e1 e2 e3 e4
