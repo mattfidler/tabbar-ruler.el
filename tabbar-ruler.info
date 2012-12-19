@@ -35,13 +35,13 @@ tabbar to look pretty...
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.14
+   * *Version* - 0.19
 
-   * *Last-Updated* - Thu Mar 1 09:02:56 2012 (-0600)
+   * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
    * *By* - Matthew L. Fidler
 
-   * *Update #* - 659
+   * *Update #* - 663
 
    * *URL* - http:__github.com_mlf176f2_tabbar-ruler.el
 
@@ -91,13 +91,25 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 
 the left arrow is text instead of an image. ## History
 
+   * *19-Dec-2012* - Upload to marmalade (Matthew L. Fidler)
+
+   * *19-Dec-2012* - Changed slope. Made the background color the
+     default background color if unspecified. Made tabbar-hex-color
+     return "None" if not defined (Matthew L. Fidler)
+
+   * *15-Dec-2012* - Made sure that the tabbr-ruler-separator-image is
+     at least 17 pixels high (Matthew L. Fidler)
+
+   * *15-Dec-2012* - Attempt to fix another bug on load (Matthew L.
+     Fidler)
+
    * *14-Dec-2012* - Fixed tabbar ruler so that it loads cold. (Matthew
      L. Fidler)
 
    * *14-Dec-2012* - Memoized the tabbar images to speed things up
      (Matthew L. Fidler)
 
-   * *14-Dec-2012* - Upload to Marmalade (Matthew L. Fidler)
+   * *14-Dec-2012* - Upload to Marmalade (Mat"thew L. Fidler)
 
    * *14-Dec-2012* - Fancy tabs (Matthew L. Fidler)
 
@@ -176,8 +188,8 @@ the left arrow is text instead of an image. ## History
 Tag Table:
 Node: Top250
 Node: Tabbar Ruler358
-Node: Introduction1180
-Node: Known issues2076
+Node: Introduction1181
+Node: Known issues2077
 
 End Tag Table
 
