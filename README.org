@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.21
+ - Version :: 0.22
  - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
  -           By :: Matthew L. Fidler
  -     Update # :: 663
@@ -159,7 +159,7 @@ NEW-COMPRESSION)=
 Removes compression extension, and possibly adds a new extension
 
 *** tabbar-ruler-image
-=(tabbar-ruler-image &rest G50114)=
+=(tabbar-ruler-image &rest G70832)=
 
 Returns the scroll-images
 
@@ -167,7 +167,7 @@ Returns the scroll-images
 (tabbar-memoized function)
 
 *** tabbar-ruler-tab-separator-image
-=(tabbar-ruler-tab-separator-image &rest G50111)=
+=(tabbar-ruler-tab-separator-image &rest G70829)=
 
 Creates a Tabbar Ruler Separator Image.
 FACE1 is the face to the left
@@ -212,6 +212,12 @@ visiting a file.  The current buffer is always included.
 *** tabbar-ruler-excluded-buffers
  - Excluded buffers in tabbar.
 
+*** tabbar-ruler-fancy-close-image
+Use an image for the close
+
+*** tabbar-ruler-fancy-tab-separator
+Separate each tab with a fancy generated image
+
 *** tabbar-ruler-fight-igore-modes
 Exclude these mode when changing between tabbar and ruler.
 
@@ -247,6 +253,7 @@ Function to call to create a new buffer in tabbar-mode.  Optional single
 argument is the MODE for the new buffer.
 * History
 
+ - 20-Feb-2013 ::  Changed so that the separators do not need to be fancy images. I found that when the separators were images, it slowed down emacs on windows. Therefore, the fancy images are disabled by default. This also includes the stylized close symbols. (Matthew L. Fidler)
  - 19-Dec-2012 ::  Added back popup-menu (Matthew L. Fidler)
  - 19-Dec-2012 ::  Upload to marmalade (Matthew L. Fidler)
  - 19-Dec-2012 ::  Changed slope. Made the background color the default background color if unspecified. Made tabbar-hex-color return "None" if not defined (Matthew L. Fidler)

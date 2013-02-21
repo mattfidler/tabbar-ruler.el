@@ -35,7 +35,7 @@ tabbar to look pretty...
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.21
+   * *Version* - 0.22
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -90,6 +90,12 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 ================
 
 the left arrow is text instead of an image. ## History
+
+   * *20-Feb-2013* - Changed so that the separators do not need to be
+     fancy images. I found that when the separators were images, it
+     slowed down emacs on windows. Therefore, the fancy images are
+     disabled by default. This also includes the stylized close
+     symbols. (Matthew L. Fidler)
 
    * *19-Dec-2012* - Added back popup-menu (Matthew L. Fidler)
 
