@@ -35,7 +35,7 @@ tabbar to look pretty...
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.23
+   * *Version* - 0.24
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -90,6 +90,9 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 ================
 
 the left arrow is text instead of an image. ## History
+
+   * *20-Mar-2013* - Changed emacs 24.3 to support the times character.
+     Also removed starred documentation strings. (Matthew L. Fidler)
 
    * *20-Mar-2013* - Emacs 24.3 had an error when using ucs-insert.
      Added fallbacks so that this works when ucs-insert does not work.
