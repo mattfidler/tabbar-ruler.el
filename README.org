@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.26
+ - Version :: 0.27
  - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
  -           By :: Matthew L. Fidler
  -     Update # :: 663
@@ -56,6 +56,7 @@ the left arrow is text instead of an image.
 ** Internal Variables
 * History
 
+ - 27-Mar-2013 ::  Fixed typo to fix issue #2. (Matthew L. Fidler)
  - 27-Mar-2013 ::  Attempt to fix issue #2. Whenever the color is not a string, assume that it should be transparent. I'm unsure if the mac osx puts the translated color to a string. However, it seems that the undefined should be the same as transparent. Therefore, this fix *should* work... (Matthew L. Fidler)
  - 20-Mar-2013 ::  Add inverse video option for unselected tabbar. Made it the default. has better contrast between the selected and unselected tabs. (Matthew L. Fidler)
  - 20-Mar-2013 ::  Changed emacs 24.3 to support the times character. Also removed starred documentation strings. (Matthew L. Fidler)
