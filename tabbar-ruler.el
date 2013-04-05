@@ -5,7 +5,7 @@
 ;; Author: Matthew Fidler, Nathaniel Cunningham
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
-;; Version: 0.27
+;; Version: 0.29
 ;; Last-Updated: Sat Dec 15 15:44:34 2012 (+0800)
 ;;           By: Matthew L. Fidler
 ;;     Update #: 663
@@ -51,6 +51,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 5-Apr-2013    Matthew L. Fidler  
+;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+;;    Trying to update upstream sources.
+;; 5-Apr-2013    Matthew L. Fidler  
+;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+;;    Fixed speed issues on windows.  It wasn't a redraw that was causing
+;;    the speed issues, it was the constant recreation of the right-click
+;;    menus... 
 ;; 27-Mar-2013    Matthew L. Fidler  
 ;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 ;;    Fixed typo to fix issue #2.
@@ -704,6 +712,7 @@ Optional argument TYPE is a mouse click event type (see the function
   "Reset memoized functions."
   (interactive)
   (tabbar-memoize 'tabbar-ruler-tab-separator-image)
+  (tabbar-memoize 'tabbar-make-tab-keymap)
   (tabbar-memoize 'tabbar-ruler-image))
 (tabbar-reset)
 
@@ -731,6 +740,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                                                                        :color (if (eq tab sel)
                                                                                   (face-attribute 'default :foreground)
                                                                                 "gray10"))))))
+          (keymap (tabbar-make-tab-keymap tab))
           (separator-image (if tabbar-ruler-fancy-tab-separator
                                (tabbar-find-image
                                 `((:type xpm :data
@@ -757,7 +767,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
     (concat
      (propertize " " 'face face
                  'tabbar-tab tab
-                 'local-map (tabbar-make-tab-keymap tab)
+                 'local-map keymap
                  'help-echo 'tabbar-help-on-tab
                  'face face
                  'pointer 'hand)
@@ -766,7 +776,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
           (funcall tabbar-tab-label-function tab)
         tab)
       'tabbar-tab tab
-      'local-map (tabbar-make-tab-keymap tab)
+      'local-map keymap
       'help-echo 'tabbar-help-on-tab
       'mouse-face 'tabbar-highlight
       'face face
@@ -783,7 +793,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                        (buffer-substring (point-min) (point-max))) " ")
                  'face face
                  'tabbar-tab tab
-                 'local-map (tabbar-make-tab-keymap tab)
+                 'local-map keymap
                  'help-echo 'tabbar-help-on-tab
                  'face face
                  'pointer 'hand)
@@ -800,7 +810,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                      'face face
                      'pointer 'hand
                      'tabbar-tab tab
-                     'local-map (tabbar-make-tab-keymap tab)
+                     'local-map keymap
                      'tabbar-action 'close-tab)
        (propertize
         (with-temp-buffer
@@ -814,7 +824,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
         'face face
         'pointer 'hand
         'tabbar-tab tab
-        'local-map (tabbar-make-tab-keymap tab)
+        'local-map keymap
         'tabbar-action 'close-tab))
      (if tabbar-ruler-fancy-tab-separator
          (propertize "|"

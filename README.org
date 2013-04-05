@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.27
+ - Version :: 0.29
  - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
  -           By :: Matthew L. Fidler
  -     Update # :: 663
@@ -56,6 +56,14 @@ the left arrow is text instead of an image.
 ** Internal Variables
 * History
 
+5-Apr-2013    Matthew L. Fidler  
+   Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+   Trying to update upstream sources.
+5-Apr-2013    Matthew L. Fidler  
+   Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+   Fixed speed issues on windows.  It wasn't a redraw that was causing
+   the speed issues, it was the constant recreation of the right-click
+   menus... 
  - 27-Mar-2013 ::  Fixed typo to fix issue #2. (Matthew L. Fidler)
  - 27-Mar-2013 ::  Attempt to fix issue #2. Whenever the color is not a string, assume that it should be transparent. I'm unsure if the mac osx puts the translated color to a string. However, it seems that the undefined should be the same as transparent. Therefore, this fix *should* work... (Matthew L. Fidler)
  - 20-Mar-2013 ::  Add inverse video option for unselected tabbar. Made it the default. has better contrast between the selected and unselected tabs. (Matthew L. Fidler)
