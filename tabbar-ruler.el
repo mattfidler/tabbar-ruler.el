@@ -5,7 +5,7 @@
 ;; Author: Matthew Fidler, Nathaniel Cunningham
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
-;; Version: 0.29
+;; Version: 0.30
 ;; Last-Updated: Sat Dec 15 15:44:34 2012 (+0800)
 ;;           By: Matthew L. Fidler
 ;;     Update #: 663
@@ -51,6 +51,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 1-May-2013    Matthew L. Fidler  
+;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+;;    Changed the modified font to italics.  Made the modified symbol
+;;    customizable, but off by default.  Should address issue #5.
 ;; 5-Apr-2013    Matthew L. Fidler  
 ;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 ;;    Trying to update upstream sources.
@@ -372,6 +376,11 @@
   "Invert deselected tabs"
   :type 'boolean
   :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-modified-symbol nil
+  "Add modified symbol in addition to changing the face."
+  :type 'boolean
+  :type 'tabbar-ruler)
 
 (defun tabbar-install-faces (&optional frame)
   "Installs faces for a frame."
@@ -781,7 +790,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
       'mouse-face 'tabbar-highlight
       'face face
       'pointer 'hand)
-     (propertize (if modified-p
+     (propertize (if (and modified-p tabbar-ruler-modified-symbol)
                      (with-temp-buffer
                        (condition-case err
                            (ucs-insert "207A")
@@ -944,15 +953,14 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 (defface tabbar-selected-modified
   '((t
      :inherit tabbar-selected
-     :weight bold))
+     :slant italic))
   "Face used for unselected tabs."
   :group 'tabbar)
 
 (defface tabbar-unselected-modified
   '((t
      :inherit tabbar-unselected
-     :weight bold
-     ))
+     :slant italic))
   "Face used for unselected tabs."
   :group 'tabbar)
 
