@@ -5,7 +5,7 @@
 ;; Author: Matthew Fidler, Nathaniel Cunningham
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
-;; Version: 0.30
+;; Version: 0.31
 ;; Last-Updated: Sat Dec 15 15:44:34 2012 (+0800)
 ;;           By: Matthew L. Fidler
 ;;     Update #: 663
@@ -51,6 +51,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 1-May-2013    Matthew L. Fidler  
+;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+;;    Try to address issue #4
 ;; 1-May-2013    Matthew L. Fidler  
 ;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 ;;    Changed the modified font to italics.  Made the modified symbol
@@ -372,6 +375,11 @@
      (t (setq ret "None")))
     (symbol-value 'ret)))
 
+(defcustom tabbar-ruler-swap-faces nil
+  "Swat the selected / unselected tab colors"
+  :type 'boolean
+  :group 'tabbar-ruler)
+
 (defcustom tabbar-ruler-invert-deselected t
   "Invert deselected tabs"
   :type 'boolean
@@ -385,8 +393,23 @@
 (defun tabbar-install-faces (&optional frame)
   "Installs faces for a frame."
   (interactive)
-  
   (copy-face 'mode-line 'tabbar-default frame)
+  (if tabbar-ruler-swap-faces
+      (progn
+        (copy-face 'default 'tabbar-selected frame)
+        (copy-face 'shadow 'tabbar-unselected frame)
+        (if tabbar-ruler-invert-deselected
+            (progn
+              (copy-face 'tabbar-selected 'tabbar-unselected)
+              (set-face-attribute 'tabbar-selected frame
+                                  :box nil)
+              (invert-face 'tabbar-selected))
+          (set-face-attribute 'tabbar-selected frame
+                              :inherit 'mode-line-buffer-id
+                              :background (face-attribute 'mode-line-inactive :background)
+                              :box nil))
+        (copy-face 'mode-line-buffer-id 'tabbar-unselected-highlight frame)
+        (copy-face 'mode-line-inactive 'tabbar-selected-highlight frame))
   (copy-face 'default 'tabbar-selected frame)
   (copy-face 'shadow 'tabbar-unselected frame)
   
@@ -403,7 +426,7 @@
   
   
   (copy-face 'mode-line-buffer-id 'tabbar-selected-highlight frame)
-  (copy-face 'mode-line-inactive 'tabbar-unselected-highlight frame)
+  (copy-face 'mode-line-inactive 'tabbar-unselected-highlight frame))
   
   (set-face-attribute 'tabbar-separator frame
                       :inherit 'tabbar-default

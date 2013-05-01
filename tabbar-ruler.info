@@ -35,7 +35,7 @@ tabbar to look pretty...
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.30
+   * *Version* - 0.31
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -92,6 +92,8 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar R
 the left arrow is text instead of an image. ## History
 
 1-May-2013 Matthew L. Fidler
+Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+Try to address issue #4 1-May-2013 Matthew L. Fidler
 Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 Changed the modified font to italics. Made the modified symbol
 customizable, but off by default. Should address issue #5. 5-Apr-2013
