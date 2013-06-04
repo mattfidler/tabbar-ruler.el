@@ -5,7 +5,7 @@
 ;; Author: Matthew Fidler, Nathaniel Cunningham
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
-;; Version: 0.31
+;; Version: 0.32
 ;; Last-Updated: Sat Dec 15 15:44:34 2012 (+0800)
 ;;           By: Matthew L. Fidler
 ;;     Update #: 663
@@ -45,12 +45,55 @@
 ;; 
 ;; 
 ;; 
+;; * Changing how tabbar groups files/buffers
+;; The default behavior for tabbar-ruler is to group the tabs by frame.
+;; You can change this back to the old-behavior by:
+;; 
+;;   (tabbar-ruler-group-old-tabbar)
+;; 
+;; or by issuing the following code:
+;; 
+;; 
+;;   (setq tabbar-buffer-list-function 'tabbar-buffer-list)
+;; 
+;; 
+;; In addition, you can also group by projectile project easily by:
+;; 
+;; 
+;;   (tabbar-ruler-group-by-projectile-project)
+;; 
+;; * Adding key-bindings to tabbar-ruler
+;; You can add key-bindings to change the current tab.  These key
+;; bindings will make sure that the ruler mode is enabled and then
+;; change the bindings.  A possible way to bind this is given below:
+;; 
+;; 
+;;   (global-set-key [(control home)]  'tabbar-ruler-tabbar-press-home)
+;;   (global-set-key [(control left)]  'tabbar-ruler-tabbar-backward)
+;;   (global-set-key [(control right)] 'tabbar-ruler-tabbar-forward)
+;;   (global-set-key [(control up)]    'tabbar-ruler-tabbar-backward-group)
+;;   (global-set-key [(control down)]  'tabbar-ruler-tabbar-forward-group)
+;;   (global-set-key [(control prior)] 'tabbar-ruler-tabbar-press-scroll-left)
+;;   (global-set-key [(control next)]  'tabbar-ruler-tabbar-press-scroll-right)
+;; 
+;; 
+;; These bindings are quite aggressive and overwrite may of the
+;; functions in emacs.  Control-Home is beginning of buffer, etc etc.
+;; However, if you do not use these functions, it is safe to overwrite
+;; these keys.  
+;; 
+;; You should choose your own key bindings for these keys.
+;; 
+;; 
 ;; * Known issues
 ;; the left arrow is text instead of an image.
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 4-Jun-2013    Matthew L. Fidler  
+;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+;;    Add movement keys.  Also add toggles for different groupings.
 ;; 1-May-2013    Matthew L. Fidler  
 ;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 ;;    Try to address issue #4
@@ -376,7 +419,7 @@
     (symbol-value 'ret)))
 
 (defcustom tabbar-ruler-swap-faces nil
-  "Swat the selected / unselected tab colors"
+  "Swap the selected / unselected tab colors"
   :type 'boolean
   :group 'tabbar-ruler)
 
@@ -1079,6 +1122,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
     cua-scroll-up
     cua-paste
     cua-paste-pop
+    scroll-up
+    scroll-down
     autopair-newline
     autopair-insert-opening
     autopair-skip-close-maybe
@@ -1096,7 +1141,10 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
       (progn
         (cond
          ((minibufferp)
-           nil)
+          nil)
+         (tabbar-ruler-keep-tabbar
+          (setq tabbar-ruler-keep-tabbar nil)
+          nil)
          ((and (save-match-data (string-match "^[*]Org Src " (buffer-name))))
           nil)
          ((member major-mode tabbar-ruler-fight-igore-modes)
@@ -1249,7 +1297,7 @@ Return a list of one element based on major mode."
            "Files"
            ))))
   (symbol-value 'last-tabbar-ruler-tabbar-buffer-groups))
-(setq tabbar-buffer-groups-function 'tabbar-ruler-tabbar-buffer-groups)
+
 
 (defun tabbar-ruler-tabbar-buffer-list ()
   "Return the list of buffers to show in tabs.
@@ -1267,7 +1315,76 @@ visiting a file.  The current buffer is always included."
                      ;;((char-equal ?* (aref (buffer-name b) 0)) nil)
                      ((buffer-live-p b) b)))
                 (buffer-list))))
-(setq tabbar-buffer-list-function 'tabbar-ruler-tabbar-buffer-list)
+
+(defvar tabbar-ruler-projectile-tabbar-buffer-group-calc nil
+  "Buffer group for projectile.  Should be buffer local and speed up calculation of buffer groups.")
+(defun tabbar-ruler-projectile-tabbar-buffer-groups ()
+  "Return the list of group names BUFFER belongs to.
+    Return only one group for each buffer."
+  
+  (if tabbar-ruler-projectile-tabbar-buffer-group-calc
+      (symbol-value 'tabbar-ruler-projectile-tabbar-buffer-group-calc)
+    (set (make-local-variable 'tabbar-ruler-projectile-tabbar-buffer-group-calc)
+         
+         (cond
+          ((or (get-buffer-process (current-buffer)) (memq major-mode '(comint-mode compilation-mode))) '("Term"))
+          ((string-equal "*" (substring (buffer-name) 0 1)) '("Misc"))
+          ((condition-case err
+               (projectile-project-root)
+             (error nil)) (list (projectile-project-name)))
+          ((memq major-mode '(emacs-lisp-mode python-mode emacs-lisp-mode c-mode c++-mode makefile-mode lua-mode vala-mode)) '("Coding"))
+          ((memq major-mode '(javascript-mode js-mode nxhtml-mode html-mode css-mode)) '("HTML"))
+          ((memq major-mode '(org-mode calendar-mode diary-mode)) '("Org"))
+          ((memq major-mode '(dired-mode)) '("Dir"))
+          (t '("Main"))))
+    (symbol-value 'tabbar-ruler-projectile-tabbar-buffer-group-calc)))
+
+(defun tabbar-ruler-group-per-frame ()
+  "Groups tabs by frame"
+  (interactive)
+  (setq tabbar-buffer-groups-function 'tabbar-ruler-tabbar-buffer-groups))
+
+(defun tabbar-ruler-group-by-projectile-project()
+  "Group by projectile project."
+  (interactive)
+  (setq tabbar-buffer-groups-function 'tabbar-ruler-projectile-tabbar-buffer-groups))
+
+(defun tabbar-ruler-group-old-tabbar ()
+  "Use tabbar's old grouping"
+  (interactive)
+  (setq tabbar-buffer-groups-function 'tabbar-buffer-list))
+
+(tabbar-ruler-group-per-frame)
+
+;;; Adapted from auto-hide in EmacsWiki
+
+(defvar tabbar-display-functions
+  '(tabbar-press-home
+    tabbar-backward
+    tabbar-forward
+    tabbar-backward-group
+    tabbar-forward-group
+    tabbar-press-scroll-left
+    tabbar-press-scroll-right)
+  "Tabbar movement functions")
+(defvar tabbar-ruler-keep-tabbar nil)
+
+(mapc
+ (lambda(x)
+   (eval `(defun ,(intern (concat "tabbar-ruler-" (symbol-name x))) ()
+            ,(concat "Turn on tabbar before running `" (symbol-name x) "'")
+            (interactive)
+            (setq tabbar-ruler-keep-tabbar t)
+            (unless tabbar-ruler-ruler-off
+              (ruler-mode -1)
+              (setq tabbar-ruler-ruler-off 't))
+            (when tabbar-ruler-tabbar-off
+              (tabbar-mode 1)
+              (setq tabbar-ruler-tabbar-off nil))
+            (call-interactively ',x))))
+ tabbar-display-functions)
+
+
 (provide 'tabbar-ruler)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; tabbar-ruler.el ends here
