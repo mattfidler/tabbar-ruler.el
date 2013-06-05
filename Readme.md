@@ -1,14 +1,14 @@
 #  Tabbar Ruler
  Matthew L. Fidler
 ## Library Information
- _tabbar-ruler.el_ --- Setup tabbar to look pretty...
+ _tabbar-ruler.el_ --- Pretty tabbar, autohide, use both tabbar/ruler
 
 - __Filename__ --  tabbar-ruler.el
 - __Description__ --  Changes tabbar setup to be similar to Aquaemacs.
 - __Author__ --  Matthew Fidler, Nathaniel Cunningham
 - __Maintainer__ --  Matthew L. Fidler
 - __Created__ --  Mon Oct 18 17:06:07 2010 (-0500)
-- __Version__ --  0.33
+- __Version__ --  0.34
 - __Last-Updated__ --  Sat Dec 15 15:44:34 2012 (+0800)
 - __By__ --  Matthew L. Fidler
 - __Update #__ --  663
@@ -48,12 +48,12 @@ To use this, put the library in your load path and use
 The default behavior for tabbar-ruler is to group the tabs by frame.
 You can change this back to the old-behavior by:
 
-  (tabbar-ruler-group-old-tabbar)
+  (tabbar-ruler-group-buffer-groups)
 
 or by issuing the following code:
 
 
-  (setq tabbar-buffer-list-function 'tabbar-buffer-list)
+  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 
 In addition, you can also group by projectile project easily by:
@@ -88,6 +88,10 @@ You should choose your own key bindings for these keys.
 the left arrow is text instead of an image.
 ## History
 
+4-Jun-2013    Matthew L. Fidler  
+   Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+   Change package description.  Fixed the documentation to actually
+   change to the old tabbar method of grouping buffers.
 4-Jun-2013    Matthew L. Fidler  
    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
    Turn off ruler mode in the next buffer (if necessary)
