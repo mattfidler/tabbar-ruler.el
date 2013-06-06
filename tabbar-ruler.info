@@ -22,8 +22,8 @@ File: tabbar-ruler.info,  Node: Tabbar Ruler,  Prev: Top,  Up: Top
 1 Tabbar Ruler
 **************
 
-Matthew L. Fidler ## Library Information _tabbar-ruler.el_ -- Setup
-tabbar to look pretty...
+Matthew L. Fidler ## Library Information _tabbar-ruler.el_ -- Pretty
+tabbar, autohide, use both tabbar/ruler
 
    * *Filename* - tabbar-ruler.el
 
@@ -35,7 +35,7 @@ tabbar to look pretty...
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.31
+   * *Version* - 0.35
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -54,10 +54,12 @@ tabbar to look pretty...
 * Menu:
 
 * Introduction::
+* Changing how tabbar groups files/buffers::
+* Adding key-bindings to tabbar-ruler::
 * Known issues::
 
 
-File: tabbar-ruler.info,  Node: Introduction,  Next: Known issues,  Up: Tabbar Ruler
+File: tabbar-ruler.info,  Node: Introduction,  Next: Changing how tabbar groups files/buffers,  Up: Tabbar Ruler
 
 1.1 Introduction
 ================
@@ -84,14 +86,61 @@ tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
 (require 'tabbar-ruler)
 
 
-File: tabbar-ruler.info,  Node: Known issues,  Prev: Introduction,  Up: Tabbar Ruler
+File: tabbar-ruler.info,  Node: Changing how tabbar groups files/buffers,  Next: Adding key-bindings to tabbar-ruler,  Prev: Introduction,  Up: Tabbar Ruler
 
-1.2 Known issues
+1.2 Changing how tabbar groups files/buffers
+============================================
+
+The default behavior for tabbar-ruler is to group the tabs by frame.
+You can change this back to the old-behavior by:
+
+(tabbar-ruler-group-buffer-groups)
+
+or by issuing the following code:
+
+(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+
+In addition, you can also group by projectile project easily by:
+
+(tabbar-ruler-group-by-projectile-project)
+
+
+File: tabbar-ruler.info,  Node: Adding key-bindings to tabbar-ruler,  Next: Known issues,  Prev: Changing how tabbar groups files/buffers,  Up: Tabbar Ruler
+
+1.3 Adding key-bindings to tabbar-ruler
+=======================================
+
+You can add key-bindings to change the current tab. The easiest way to
+add the bindings is to add a key like:
+
+(global-set-key (kbd "C-c t") 'tabbar-ruler-move)
+
+After that, all you would need to press is Control+c t and then the
+arrow keys will allow you to change the buffer quite easily. To exit
+the buffer movement you can press enter or space.
+
+
+File: tabbar-ruler.info,  Node: Known issues,  Prev: Adding key-bindings to tabbar-ruler,  Up: Tabbar Ruler
+
+1.4 Known issues
 ================
 
 the left arrow is text instead of an image. ## History
 
-1-May-2013 Matthew L. Fidler
+6-Jun-2013 Matthew L. Fidler
+Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+Changed movement commands. The movement commands are simpler (in my
+opinion) 4-Jun-2013 Matthew L. Fidler
+Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+Change package description. Fixed the documentation to actually change
+to the old tabbar method of grouping buffers. 4-Jun-2013 Matthew L.
+Fidler
+Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+Turn off ruler mode in the next buffer (if necessary) 4-Jun-2013
+Matthew L. Fidler
+Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+Add movement keys. Also add toggles for different groupings. 1-May-2013
+Matthew L. Fidler
 Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 Try to address issue #4 1-May-2013 Matthew L. Fidler
 Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
@@ -175,8 +224,10 @@ and ruler variables to be buffer or frame local. (Matthew L. Fidler)
 Tag Table:
 Node: Top250
 Node: Tabbar Ruler358
-Node: Introduction1181
-Node: Known issues2077
+Node: Introduction1282
+Node: Changing how tabbar groups files/buffers2206
+Node: Adding key-bindings to tabbar-ruler2817
+Node: Known issues3408
 
 End Tag Table
 
