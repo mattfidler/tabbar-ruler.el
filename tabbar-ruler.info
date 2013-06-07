@@ -35,7 +35,7 @@ tabbar, autohide, use both tabbar/ruler
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.35
+   * *Version* - 0.36
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -128,6 +128,9 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Adding key-bindings to tabb
 the left arrow is text instead of an image. ## History
 
 6-Jun-2013 Matthew L. Fidler
+Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+Added left-char and right char to tabbar-ruler-move-keymap so that
+keybindings in emacs 24.3 work correctly. 6-Jun-2013 Matthew L. Fidler
 Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 Changed movement commands. The movement commands are simpler (in my
 opinion) 4-Jun-2013 Matthew L. Fidler
