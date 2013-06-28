@@ -35,7 +35,7 @@ tabbar, autohide, use both tabbar/ruler
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.37
+   * *Version* - 0.38
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -78,12 +78,12 @@ Also allows auto-hiding of toolbar and menu.
 
 To use this, put the library in your load path and use
 
-(setq tabbar-ruler-global-tabbar 't) ; If you want tabbar (setq
-tabbar-ruler-global-ruler 't) ; if you want a global ruler (setq
-tabbar-ruler-popup-menu 't) ; If you want a popup menu. (setq
-tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
-
-(require 'tabbar-ruler)
+(setq tabbar-ruler-global-tabbar t) ; If you want tabbar (setq
+tabbar-ruler-global-ruler t) ; if you want a global ruler (setq
+tabbar-ruler-popup-menu t) ; If you want a popup menu. (setq
+tabbar-ruler-popup-toolbar t) ; If you want a popup toolbar (setq
+tabbar-ruler-popup-scrollbar t) ; If you want to only show the ; scroll
+bar when your mouse is moving. (require 'tabbar-ruler)
 
 
 File: tabbar-ruler.info,  Node: Changing how tabbar groups files/buffers,  Next: Adding key-bindings to tabbar-ruler,  Prev: Introduction,  Up: Tabbar Ruler
@@ -282,9 +282,9 @@ Tag Table:
 Node: Top250
 Node: Tabbar Ruler358
 Node: Introduction1282
-Node: Changing how tabbar groups files/buffers2206
-Node: Adding key-bindings to tabbar-ruler2817
-Node: Known issues3408
+Node: Changing how tabbar groups files/buffers2310
+Node: Adding key-bindings to tabbar-ruler2921
+Node: Known issues3512
 
 End Tag Table
 

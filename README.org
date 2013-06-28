@@ -8,7 +8,7 @@
  - Author :: Matthew Fidler, Nathaniel Cunningham
  - Maintainer :: Matthew L. Fidler
  - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.37
+ - Version :: 0.38
  - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
  -           By :: Matthew L. Fidler
  -     Update # :: 663
@@ -34,11 +34,12 @@ Also allows auto-hiding of toolbar and menu.
 To use this, put the library in your load path and use
 
 #+BEGIN_SRC emacs-lisp
-  (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
-  (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
-  (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
-  (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
-  
+  (setq tabbar-ruler-global-tabbar t) ; If you want tabbar
+  (setq tabbar-ruler-global-ruler t) ; if you want a global ruler
+  (setq tabbar-ruler-popup-menu t) ; If you want a popup menu.
+  (setq tabbar-ruler-popup-toolbar t) ; If you want a popup toolbar
+  (setq tabbar-ruler-popup-scrollbar t) ; If you want to only show the
+                                        ; scroll bar when your mouse is moving.
   (require 'tabbar-ruler)
   
 #+END_SRC
