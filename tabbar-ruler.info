@@ -35,7 +35,7 @@ tabbar, autohide, use both tabbar/ruler
 
    * *Created* - Mon Oct 18 17:06:07 2010 (-0500)
 
-   * *Version* - 0.38
+   * *Version* - 0.39
 
    * *Last-Updated* - Sat Dec 15 15:44:34 2012 (+0800)
 
@@ -126,6 +126,10 @@ File: tabbar-ruler.info,  Node: Known issues,  Prev: Adding key-bindings to tabb
 ================
 
 the left arrow is text instead of an image. ## History
+
+   * *28-Jun-2013* - Fixed strange org-readme issue (Matthew L. Fidler)
+
+   * *28-Jun-2013* - Added popup scrollbarbar (Matthew L. Fidler)
 
    * *27-Jun-2013* - Added autoload for tabbar-install-faces. That way
      ergoemacs and other packages can load the tabbar-ruler by just
