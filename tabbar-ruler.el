@@ -1016,36 +1016,17 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 (defface tabbar-selected-modified
   '((t
      :inherit tabbar-selected
+     :foreground "DarkOrange3"
      :weight bold))
-  "Face used for unselected tabs."
+   "Face used for selected tabs."
   :group 'tabbar)
 
 (defface tabbar-unselected-modified
   '((t
      :inherit tabbar-unselected
+     :foreground "DarkOrange3"
      :weight bold))
-  "Face used for unselected tabs."
-  :group 'tabbar)
-
-(defface tabbar-key-binding '((t
-                               :foreground "white"))
-  "Face for unselected, highlighted tabs."
-  :group 'tabbar)
-
-
-
-(defface tabbar-selected-modified
-  '((t
-     :inherit tabbar-selected
-     :slant italic))
-  "Face used for unselected tabs."
-  :group 'tabbar)
-
-(defface tabbar-unselected-modified
-  '((t
-     :inherit tabbar-unselected
-     :slant italic))
-  "Face used for unselected tabs."
+   "Face used for unselected tabs."
   :group 'tabbar)
 
 (defface tabbar-key-binding '((t
@@ -1522,6 +1503,22 @@ remove the keymap depends on user input and KEEP-PRED:
     (setq tabbar-ruler-tabbar-off nil))
   (message "Use arrow keys to change buffers (or line movement commands).  Exit with space/return or any other key.")
   (set-temporary-overlay-map tabbar-ruler-move-keymap 'tabbar-ruler-move-pred))
+
+;; Hook save and change events to show modified buffers in tabbar
+(defun on-saving-buffer ()
+  (tabbar-set-template tabbar-current-tabset nil)
+  (tabbar-display-update))
+(defun on-modifying-buffer ()
+  (set-buffer-modified-p (buffer-modified-p))
+  (tabbar-set-template tabbar-current-tabset nil)
+  (tabbar-display-update))
+(defun after-modifying-buffer (begin end length)
+  (set-buffer-modified-p (buffer-modified-p))
+  (tabbar-set-template tabbar-current-tabset nil)
+  (tabbar-display-update))
+(add-hook 'after-save-hook 'on-saving-buffer)
+(add-hook 'first-change-hook 'on-modifying-buffer)
+(add-hook 'after-change-functions 'after-modifying-buffer)
 
 (provide 'tabbar-ruler)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
