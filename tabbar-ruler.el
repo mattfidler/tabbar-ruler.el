@@ -1354,13 +1354,24 @@ visiting a file.  The current buffer is always included."
   (interactive)
   (setq tabbar-buffer-groups-function 'tabbar-ruler-projectile-tabbar-buffer-groups))
 
+(defun tabbar-ruler-group-user-buffers-helper ()
+   ;; customize tabbar to have only 2 groups: emacs's and user's buffers
+   ;; all normal files will be shown in group user's buffers
+   (list (cond ((string-equal "*" (substring (buffer-name) 0 1)) "emacs's buffers")
+               ((eq major-mode 'dired-mode) "emacs's buffers")
+               (t "user's buffers"))))
+
+(defun tabbar-ruler-group-user-buffers ()
+   (interactive)
+   (setq tabbar-buffer-groups-function 'tabbar-ruler-group-user-buffers-helper))
 
 (defun tabbar-ruler-group-buffer-groups ()
   "Use tabbar's major-mode grouping of buffers."
   (interactive)
   (setq tabbar-buffer-groups-function 'tabbar-buffer-groups))
 
-(tabbar-ruler-group-buffer-groups)
+;; default group mode
+(tabbar-ruler-group-user-buffers)
 
 ;;; Adapted from auto-hide in EmacsWiki
 
