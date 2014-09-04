@@ -809,17 +809,60 @@ Optional argument TYPE is a mouse click event type (see the function
   (tabbar-memoize 'tabbar-ruler-image))
 (tabbar-reset)
 
+(defsubst tabbar-drag-p (event)
+  "Return non-nil if EVENT is a mouse drag event."
+  (memq 'drag (event-modifiers event)))
 
 (defun tabbar-select-tab-callback (event)
   "Handle a mouse EVENT on a tab.
 Pass mouse click events on a tab to `tabbar-click-on-tab'."
   (interactive "@e")
-  (when (tabbar-click-p event)
-    (let ((target (posn-string (event-start event))))
-      (tabbar-click-on-tab
-       (get-text-property (cdr target) 'tabbar-tab (car target))
-       event
-       (get-text-property (cdr target) 'tabbar-action (car target))))))
+  (cond 
+    ((tabbar-click-p event)
+      (let ((target (posn-string (event-start event))))
+        (tabbar-click-on-tab
+          (get-text-property (cdr target) 'tabbar-tab (car target))
+          event
+          (get-text-property (cdr target) 'tabbar-action (car target)))))
+    ((tabbar-drag-p event)
+      (let ((start-target (posn-string (event-start event)))
+            (end-target (posn-string (event-end event))))
+        (tabbar-drag-tab
+          (get-text-property (cdr start-target) 'tabbar-tab (car start-target))
+          (get-text-property (cdr end-target) 'tabbar-tab (car end-target))
+          event)))
+  ))
+
+(defun tabbar-drag-tab (dragged-tab dropped-tab event)
+  "Handle DRAGGED-TAB dragged-and-dropped onto DROPPED-TAB.
+   Include full mouse EVENT from drag-and-drop action."
+  (let ((start-tabset (tabbar-tab-tabset dragged-tab)))
+    (when (and (eq start-tabset (tabbar-tab-tabset dropped-tab))
+           (not (eq dragged-tab dropped-tab)))
+      (let* ((tabs (tabbar-tabs start-tabset))
+         (drop-tail-length (length (memq dropped-tab tabs)))
+         (drag-tail-length (length (memq dragged-tab tabs)))
+         (dragdrop-pair (list dragged-tab dropped-tab))
+         new-tablist)
+    (when (> drag-tail-length drop-tail-length)
+      (setq dragdrop-pair (reverse dragdrop-pair)))
+    (dolist (thistab (reverse tabs))
+      ;; build list of tabs.  When we hit dragged-tab, don't append it.
+      ;; When we hit dropped-tab, append dragdrop-pair
+      (cond
+        ((eq thistab dragged-tab))
+        ((eq thistab dropped-tab)
+         (setq new-tablist (append dragdrop-pair new-tablist)))
+        (t (add-to-list 'new-tablist thistab))
+      ))
+    (set start-tabset new-tablist)
+    ;; (setq tabbar-window-cache nil)  ;; didn't help
+    (tabbar-set-template start-tabset nil)
+    ;; open the dragged tab
+    (funcall tabbar-select-tab-function
+             (tabbar-make-mouse-event event) dragged-tab)
+    (tabbar-display-update)
+    ))))
 
 (defsubst tabbar-line-tab (tab &optional not-last sel)
   "Return the display representation of tab TAB.
