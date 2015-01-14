@@ -2,10 +2,10 @@
 ;;
 ;; Filename: tabbar-ruler.el
 ;; Description: Changes tabbar setup to be similar to Aquaemacs.
-;; Author: Matthew Fidler, Nathaniel Cunningham
+;; Author: Matthew Fidler, Ta Quang Trung, Nathaniel Cunningham
 ;; Maintainer: Matthew L. Fidler
 ;; Created: Mon Oct 18 17:06:07 2010 (-0500)
-;; Version: 0.40
+;; Version: 0.42
 ;; Last-Updated: Sat Dec 15 15:44:34 2012 (+0800)
 ;;           By: Matthew L. Fidler
 ;;     Update #: 663
@@ -81,6 +81,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;; 13-Sep-2014    Matthew L. Fidler  
+;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
+;;    Version bump
 ;; 1-Jul-2013    Matthew L. Fidler  
 ;;    Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler)
 ;;    Fix variable misspecification
@@ -1144,6 +1147,11 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
   :type 'boolean
   :group 'tabbar-ruler)
 
+(defcustom tabbar-ruler-movement-timer-delay 0.1
+  "Timer Delay for `tabbar-ruler-movement-timer'"
+  :type 'number
+  :group 'tabbar-ruler)
+
 (defvar tabbar-ruler-tabbar-off 't)
 (defvar tabbar-ruler-ruler-off 't)
 (set (make-variable-buffer-local 'tabbar-ruler-toolbar-off) nil)
@@ -1308,8 +1316,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
               (unless tabbar-ruler-toolbar-off
                 (tool-bar-mode -1)
                 (setq tabbar-ruler-toolbar-off 't)))))))
-    (setq tabbar-ruler-movement-timer (run-with-timer
-                                       0.01
+    (setq tabbar-ruler-movement-timer (run-with-idle-timer
+                                       tabbar-ruler-movement-timer-delay
                                        nil
                                        'tabbar-ruler-mouse-movement))))
 (tabbar-ruler-mouse-movement)
