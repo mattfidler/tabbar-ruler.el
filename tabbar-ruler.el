@@ -1582,6 +1582,16 @@ remove the keymap depends on user input and KEEP-PRED:
 (add-hook 'first-change-hook 'on-modifying-buffer)
 (add-hook 'after-change-functions 'after-modifying-buffer)
 
+(defun tabbar-ruler-remove-caches
+  "Remove caches for tabbar-ruler."
+  ;; Courtesy of Ba Manzi
+  ;; https://bitbucket.org/bamanzi/dotemacs-elite/issue/24/tabbar-ruler-not-work-in-emacs-244-keep
+  (mapc #'(lambda (frame)
+            (modify-frame-parameters frame '((tabbar-cache . nil))))
+        (frame-list)))
+
+(add-hook 'desktop-after-read-hook 'tabbar-ruler-remove-caches)
+
 (provide 'tabbar-ruler)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; tabbar-ruler.el ends here
