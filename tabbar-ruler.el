@@ -1317,11 +1317,29 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                 (tool-bar-mode -1)
                 (setq tabbar-ruler-toolbar-off 't)))))))
     (setq tabbar-ruler-movement-timer (run-with-idle-timer
-                                       tabbar-ruler-movement-timer-delay
+                                       (time-add
+                                        (if
+                                            (current-idle-time)
+                                            (current-idle-time)
+                                            (seconds-to-time 0))
+                                        (seconds-to-time
+                                         tabbar-ruler-movement-timer-delay))
                                        nil
                                        'tabbar-ruler-mouse-movement))))
 (tabbar-ruler-mouse-movement)
 
+(defun tabbar-ruler-movement-timer-reset ()
+  "Mouse movement timer reset"
+  (interactive)
+  (when tabbar-ruler-movement-timer
+    (cancel-timer tabbar-ruler-movement-timer))
+  (setq tabbar-ruler-movement-timer (run-with-idle-timer
+                                    (seconds-to-time
+                                     tabbar-ruler-movement-timer-delay)
+                                     nil
+                                     'tabbar-ruler-mouse-movement)))
+
+(add-hook 'post-command-hook 'tabbar-ruler-movement-timer-reset)
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
