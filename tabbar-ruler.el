@@ -1592,6 +1592,14 @@ remove the keymap depends on user input and KEEP-PRED:
 
 (add-hook 'desktop-after-read-hook 'tabbar-ruler-remove-caches)
 
+(defadvice enable-theme (after tabbar-ruler-enable-theme-after activate)
+  "Fix the tabbar faces when you change themes."
+  (tabbar-install-faces))
+
+(defadvice disable-theme (after tabbar-ruler-disable-theme-after activate)
+  "Fix the tabbar faces when you change themes."
+  (tabbar-install-faces))
+
 (provide 'tabbar-ruler)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; tabbar-ruler.el ends here
