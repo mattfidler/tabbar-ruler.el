@@ -560,7 +560,7 @@ When FACE1 does not equal FACE2, this creates a selected separator
          (m (or slope 2))
          (w (/ h m))
          (i h)
-         x1 x2 e1 e2 e3 e4
+         x1 x2 e1 e2 e3 e4 e5
          (color1 (if face1 (tabbar-hex-color (face-attribute face1 :background)) "None"))
          (color1-border (if face1 (tabbar-hex-color (face-attribute face1 :foreground)) "None"))
          (color2 (if face2 (tabbar-hex-color (face-attribute face2 :background)) "None"))
