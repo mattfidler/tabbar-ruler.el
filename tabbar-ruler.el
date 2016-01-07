@@ -749,16 +749,16 @@ clr
       (cons (cons " >" tabbar-scroll-right-button-enabled-image)
             (cons " =" tabbar-scroll-right-button-disabled-image)))
 
-(defsubst tabbar-normalize-image (image &optional margin nomask)
+(defsubst tabbar-normalize-image (image &optional margin mask)
   "Make IMAGE centered and transparent.
 If optional MARGIN is non-nil, it must be a number of pixels to add as
-an extra margin around the image.  If optional NOMASK is non-nil, no mask
+an extra margin around the image.  If optional MASK is non-nil, mask
 property is included."
   (let ((plist (cdr image)))
     (or (plist-get plist :ascent)
         (setq plist (plist-put plist :ascent 'center)))
     (or (plist-get plist :mask)
-        (unless nomask
+        (when mask
           (setq plist (plist-put plist :mask '(heuristic t)))))
     (or (not (natnump margin))
         (plist-get plist :margin)
