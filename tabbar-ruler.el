@@ -1029,7 +1029,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
   :type '(repeat (symbol :tag "Major Mode"))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-fancy-tab-separator 'rounded
+(defcustom tabbar-ruler-fancy-tab-separator nil
   "Separate each tab with a fancy generated image"
   :type '(choice
 	  (const :tag "Text" nil)
