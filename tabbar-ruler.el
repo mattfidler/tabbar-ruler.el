@@ -295,6 +295,96 @@
 (require 'easymenu)
 (require 'powerline nil t)
 
+(defgroup tabbar-ruler nil
+  "Pretty tabbar, autohide, use both tabbar/ruler."
+  :group 'tabbar)
+
+(defcustom tabbar-ruler-global-tabbar 't
+  "Should tabbar-ruler have a global tabbar?"
+  :type 'boolean
+  :group 'tabbar-ruler)
+(defcustom tabbar-ruler-global-ruler nil
+  "Should tabbar-ruler have a global ruler?"
+  :type 'boolean
+  :group 'tabbar-ruler)
+(defcustom tabbar-ruler-popup-menu nil
+  "Should tabbar-ruler have a popup menu.  As mouse moves toward top of window, the menu pops up."
+  :type 'boolean
+  :group 'tabbar-ruler)
+(defcustom tabbar-ruler-popup-toolbar nil
+  "Should tabbar-ruler have a popup toolbar.  As mouse moves toward top of window, the toolbar pops up."
+  :type 'boolean
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-popup-scrollbar nil
+  "Should tabbas-ruler have popup scrollbar.  As mouse moves, the scroll-bar pops up.  Otherwise the sroll-bar is turned off."
+  :type 'boolean
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-popup-menu-min-y 5 ;
+  "Minimum number of pixels from the top before a menu/toolbar pops up."
+  :type 'integer
+  :group 'tabbar-ruler)
+(defcustom tabbar-ruler-popup-menu-min-y-leave 50
+  "Minimum number of pixels form the top before a menu/toolbar disappears."
+  :type 'integer
+  :group 'tabbar-ruler)
+(defcustom tabbar-ruler-do-not-switch-on-ruler-when-tabbar-is-on-y 75
+  "Minimum number of pixels to switch on ruler when tabbar is on."
+  :type 'integer
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-excluded-buffers '("*Messages*" "*Completions*" "*ESS*")
+  "Excluded buffers in tabbar."
+  :type '(repeat (string :tag "Buffer Name"))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-fight-igore-modes '(info-mode helm-mode package-menu-mode)
+  "Exclude these mode when changing between tabbar and ruler."
+  :type '(repeat (symbol :tag "Major Mode"))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-fancy-tab-separator nil
+  "Separate each tab with a fancy generated image"
+  :type '(choice
+	  (const :tag "Text" nil)
+	  (const :tag "Alternate" alternate)
+	  (const :tag "arrow" arrow)
+	  (const :tag "arrow-fade" arrow-fade)
+	  (const :tag "bar" bar)
+	  (const :tag "box" box)
+	  (const :tag "brace" brace)
+	  (const :tag "butt" butt)
+	  (const :tag "chamfer" chamfer)
+	  (const :tag "contour" contour)
+	  (const :tag "curve" curve)
+	  (const :tag "rounded" rounded)
+	  (const :tag "roundstub" roundstub)
+	  (const :tag "slant" slant)
+	  (const :tag "wave" wave)
+	  (const :tag "zigzag" zigzag))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-fancy-close-image nil
+  "Use an image for the close"
+  :type 'boolean
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-movement-timer-delay 0.1
+  "Timer Delay for `tabbar-ruler-movement-timer'"
+  :type 'number
+  :group 'tabbar-ruler)
+
+(defvar tabbar-close-tab-function nil
+  "Function to call to close a tabbar tab.  Passed a single argument, the tab
+construct to be closed.")
+
+(defvar tabbar-new-tab-function nil
+  "Function to call to create a new buffer in tabbar-mode.  Optional single
+argument is the MODE for the new buffer.")
+
+(defvar tabbar-last-tab nil)
+(defvar tabbar-ruler-keep-tabbar nil)
 
 (defun tabbar-popup-menu ()
   "Keymap for pop-up menu.  Emacs only."
@@ -452,7 +542,7 @@
 (defcustom tabbar-ruler-modified-symbol nil
   "Add modified symbol in addition to changing the face."
   :type 'boolean
-  :type 'tabbar-ruler)
+  :group 'tabbar-ruler)
 
 ;;;###autoload
 (defun tabbar-install-faces (&optional frame)
@@ -634,29 +724,29 @@ clr
   (cons (cons "[o]" tabbar-home-button-enabled-image)
             (cons "[x]" tabbar-home-button-disabled-image)))
 
-(setq tabbar-buffer-home-button
-      (cons (cons "[+]" tabbar-home-button-enabled-image)
-            (cons "[-]" tabbar-home-button-disabled-image)))
+(defvar tabbar-buffer-home-button
+  (cons (cons "[+]" tabbar-home-button-enabled-image)
+        (cons "[-]" tabbar-home-button-disabled-image)))
 
-(setq tabbar-scroll-left-button-enabled-image
-      `((:type xpm :data ,(tabbar-ruler-image :type 'left))))
+(defvar tabbar-scroll-left-button-enabled-image
+  `((:type xpm :data ,(tabbar-ruler-image :type 'left))))
 
-(setq tabbar-scroll-left-button-disabled-image
-      `((:type xpm :data ,(tabbar-ruler-image :type 'left :disabled t))))
+(defvar tabbar-scroll-left-button-disabled-image
+  `((:type xpm :data ,(tabbar-ruler-image :type 'left :disabled t))))
 
-(setq tabbar-scroll-left-button
-      (cons (cons " <" tabbar-scroll-left-button-enabled-image)
-            (cons " =" tabbar-scroll-left-button-disabled-image)))
+(defvar tabbar-scroll-left-button
+  (cons (cons " <" tabbar-scroll-left-button-enabled-image)
+        (cons " =" tabbar-scroll-left-button-disabled-image)))
 
-(setq tabbar-scroll-right-button-enabled-image
-      `((:type xpm :data ,(tabbar-ruler-image :type 'right))))
+(defvar tabbar-scroll-right-button-enabled-image
+  `((:type xpm :data ,(tabbar-ruler-image :type 'right))))
 
-(setq tabbar-scroll-right-button-disabled-image
-      `((:type xpm :data  ,(tabbar-ruler-image :type 'right :disabled t))))
+(defvar tabbar-scroll-right-button-disabled-image
+  `((:type xpm :data  ,(tabbar-ruler-image :type 'right :disabled t))))
 
-(setq tabbar-scroll-right-button
-      (cons (cons " >" tabbar-scroll-right-button-enabled-image)
-            (cons " =" tabbar-scroll-right-button-disabled-image)))
+(defvar tabbar-scroll-right-button
+  (cons (cons " >" tabbar-scroll-right-button-enabled-image)
+        (cons " =" tabbar-scroll-right-button-disabled-image)))
 
 (defsubst tabbar-normalize-image (image &optional margin mask)
   "Make IMAGE centered and transparent.
@@ -675,14 +765,6 @@ property is included."
     (setcdr image plist))
   image)
 
-(defvar tabbar-close-tab-function nil
-  "Function to call to close a tabbar tab.  Passed a single argument, the tab
-construct to be closed.")
-
-(defvar tabbar-new-tab-function nil
-  "Function to call to create a new buffer in tabbar-mode.  Optional single
-argument is the MODE for the new buffer.")
-
 ;; for buffer tabs, use the usual command to close/kill a buffer
 (defun tabbar-buffer-close-tab (tab)
   (let ((buffer (tabbar-tab-value tab)))
@@ -690,8 +772,6 @@ argument is the MODE for the new buffer.")
       (kill-buffer buffer))))
 
 (setq tabbar-close-tab-function 'tabbar-buffer-close-tab)
-
-(defvar tabbar-last-tab nil)
 
 (defsubst tabbar-click-on-tab (tab &optional type action)
   "Handle a mouse click event on tab TAB.
@@ -984,82 +1064,6 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
   (tabbar-ruler-modification-state-change))
 (add-hook 'after-save-hook 'tabbar-ruler-modification-state-change)
 
-(defcustom tabbar-ruler-global-tabbar 't
-  "Should tabbar-ruler have a global tabbar?"
-  :type 'boolean
-  :group 'tabbar-ruler)
-(defcustom tabbar-ruler-global-ruler nil
-  "Should tabbar-ruler have a global ruler?"
-  :type 'boolean
-  :group 'tabbar-ruler)
-(defcustom tabbar-ruler-popup-menu nil
-  "Should tabbar-ruler have a popup menu.  As mouse moves toward top of window, the menu pops up."
-  :type 'boolean
-  :group 'tabbar-ruler)
-(defcustom tabbar-ruler-popup-toolbar nil
-  "Should tabbar-ruler have a popup toolbar.  As mouse moves toward top of window, the toolbar pops up."
-  :type 'boolean
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-popup-scrollbar nil
-  "Should tabbas-ruler have popup scrollbar.  As mouse moves, the scroll-bar pops up.  Otherwise the sroll-bar is turned off."
-  :type 'boolean
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-popup-menu-min-y 5 ;
-  "Minimum number of pixels from the top before a menu/toolbar pops up."
-  :type 'integer
-  :group 'tabbar-ruler)
-(defcustom tabbar-ruler-popup-menu-min-y-leave 50
-  "Minimum number of pixels form the top before a menu/toolbar disappears."
-  :type 'integer
-  :group 'tabbar-ruler)
-(defcustom tabbar-ruler-do-not-switch-on-ruler-when-tabbar-is-on-y 75
-  "Minimum number of pixels to switch on ruler when tabbar is on."
-  :type 'integer          
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-excluded-buffers '("*Messages*" "*Completions*" "*ESS*")
-  "Excluded buffers in tabbar."
-  :type '(repeat (string :tag "Buffer Name"))
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-fight-igore-modes '(info-mode helm-mode package-menu-mode)
-  "Exclude these mode when changing between tabbar and ruler."
-  :type '(repeat (symbol :tag "Major Mode"))
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-fancy-tab-separator nil
-  "Separate each tab with a fancy generated image"
-  :type '(choice
-	  (const :tag "Text" nil)
-	  (const :tag "Alternate" alternate)
-	  (const :tag "arrow" arrow)
-	  (const :tag "arrow-fade" arrow-fade)
-	  (const :tag "bar" bar)
-	  (const :tag "box" box)
-	  (const :tag "brace" brace)
-	  (const :tag "butt" butt)
-	  (const :tag "chamfer" chamfer)
-	  (const :tag "contour" contour)
-	  (const :tag "curve" curve)
-	  (const :tag "rounded" rounded)
-	  (const :tag "roundstub" roundstub)
-	  (const :tag "slant" slant)
-	  (const :tag "wave" wave)
-	  (const :tag "zigzag" zigzag))
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-fancy-close-image nil
-  "Use an image for the close"
-  :type 'boolean
-  :group 'tabbar-ruler)
-
-(defcustom tabbar-ruler-movement-timer-delay 0.1
-  "Timer Delay for `tabbar-ruler-movement-timer'"
-  :type 'number
-  :group 'tabbar-ruler)
-
 (defvar tabbar-ruler-tabbar-off 't)
 (defvar tabbar-ruler-ruler-off 't)
 (set (make-variable-buffer-local 'tabbar-ruler-toolbar-off) nil)
@@ -1249,7 +1253,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 
 (add-hook 'post-command-hook 'tabbar-ruler-movement-timer-reset)
 
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+(defvar tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 (defun last-tabbar-ruler-tabbar-buffer-groups nil)
 
@@ -1363,8 +1367,6 @@ visiting a file.  The current buffer is always included."
     tabbar-press-scroll-left
     tabbar-press-scroll-right)
   "Tabbar movement functions")
-
-(defvar tabbar-ruler-keep-tabbar nil)
 
 (mapc
  (lambda(x)
