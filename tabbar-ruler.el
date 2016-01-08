@@ -634,29 +634,29 @@ clr
   (cons (cons "[o]" tabbar-home-button-enabled-image)
             (cons "[x]" tabbar-home-button-disabled-image)))
 
-(setq tabbar-buffer-home-button
-      (cons (cons "[+]" tabbar-home-button-enabled-image)
-            (cons "[-]" tabbar-home-button-disabled-image)))
+(defvar tabbar-buffer-home-button
+  (cons (cons "[+]" tabbar-home-button-enabled-image)
+        (cons "[-]" tabbar-home-button-disabled-image)))
 
-(setq tabbar-scroll-left-button-enabled-image
-      `((:type xpm :data ,(tabbar-ruler-image :type 'left))))
+(defvar tabbar-scroll-left-button-enabled-image
+  `((:type xpm :data ,(tabbar-ruler-image :type 'left))))
 
-(setq tabbar-scroll-left-button-disabled-image
-      `((:type xpm :data ,(tabbar-ruler-image :type 'left :disabled t))))
+(defvar tabbar-scroll-left-button-disabled-image
+  `((:type xpm :data ,(tabbar-ruler-image :type 'left :disabled t))))
 
-(setq tabbar-scroll-left-button
-      (cons (cons " <" tabbar-scroll-left-button-enabled-image)
-            (cons " =" tabbar-scroll-left-button-disabled-image)))
+(defvar tabbar-scroll-left-button
+  (cons (cons " <" tabbar-scroll-left-button-enabled-image)
+        (cons " =" tabbar-scroll-left-button-disabled-image)))
 
-(setq tabbar-scroll-right-button-enabled-image
-      `((:type xpm :data ,(tabbar-ruler-image :type 'right))))
+(defvar tabbar-scroll-right-button-enabled-image
+  `((:type xpm :data ,(tabbar-ruler-image :type 'right))))
 
-(setq tabbar-scroll-right-button-disabled-image
-      `((:type xpm :data  ,(tabbar-ruler-image :type 'right :disabled t))))
+(defvar tabbar-scroll-right-button-disabled-image
+  `((:type xpm :data  ,(tabbar-ruler-image :type 'right :disabled t))))
 
-(setq tabbar-scroll-right-button
-      (cons (cons " >" tabbar-scroll-right-button-enabled-image)
-            (cons " =" tabbar-scroll-right-button-disabled-image)))
+(defvar tabbar-scroll-right-button
+  (cons (cons " >" tabbar-scroll-right-button-enabled-image)
+        (cons " =" tabbar-scroll-right-button-disabled-image)))
 
 (defsubst tabbar-normalize-image (image &optional margin mask)
   "Make IMAGE centered and transparent.
@@ -1249,7 +1249,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 
 (add-hook 'post-command-hook 'tabbar-ruler-movement-timer-reset)
 
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+(defvar tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 (defun last-tabbar-ruler-tabbar-buffer-groups nil)
 
