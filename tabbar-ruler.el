@@ -452,7 +452,7 @@
 (defcustom tabbar-ruler-modified-symbol nil
   "Add modified symbol in addition to changing the face."
   :type 'boolean
-  :type 'tabbar-ruler)
+  :group 'tabbar-ruler)
 
 ;;;###autoload
 (defun tabbar-install-faces (&optional frame)
