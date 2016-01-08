@@ -295,6 +295,10 @@
 (require 'easymenu)
 (require 'powerline nil t)
 
+(defgroup tabbar-ruler nil
+  "Pretty tabbar, autohide, use both tabbar/ruler."
+  :group 'tabbar)
+
 (defcustom tabbar-ruler-global-tabbar 't
   "Should tabbar-ruler have a global tabbar?"
   :type 'boolean
