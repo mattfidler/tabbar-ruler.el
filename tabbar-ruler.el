@@ -908,7 +908,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                            (ucs-insert "207A")
                          (error
                           (condition-case err
-                              (insert-char 0x207A)
+                              (insert-char #x207A)
                             (error (insert "*")))))
                        (insert " ")
                        (buffer-substring (point-min) (point-max))) " ")
