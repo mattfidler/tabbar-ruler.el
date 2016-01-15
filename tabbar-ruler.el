@@ -365,14 +365,6 @@
 	  (const :tag "zigzag" zigzag))
   :group 'tabbar-ruler)
 
-
-(defcustom tabbar-ruler-fancy-current-tab-separator nil
-  "Separate each tab with a fancy generated image"
-  ;; TODO: type same as "tabbar-ruler-fancy-tab-separator"
-  ;; may be inherit
-  :group 'tabbar-ruler)
-
-
 (defcustom tabbar-ruler-fancy-close-image nil
   "Use an image for the close"
   :type 'boolean
@@ -876,25 +868,24 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                                                                                   (face-attribute 'default :foreground)
                                                                                 "gray10"))))))
           (keymap (tabbar-make-tab-keymap tab))
-          (left-fun
-           (if selected-p
-               (intern (format "powerline-%s-left" tabbar-ruler-fancy-current-tab-separator))
-               (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator))))
-          (right-fun
-           (if selected-p
-               (intern (format "powerline-%s-right" tabbar-ruler-fancy-current-tab-separator))
-               (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))))
+	  (left-fun (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator)))
+	  (right-fun (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator)))
           (face (if selected-p
                     (if modified-p
                         'tabbar-selected-modified
                       'tabbar-selected)
                   (if modified-p
                       'tabbar-unselected-modified
-                    'tabbar-unselected))))
+                    'tabbar-unselected)))
+	  (next-face (if not-last
+			 (if (tabbar-selected-p (car not-last) (tabbar-current-tabset))
+			     (if (buffer-modified-p (tabbar-tab-value (car not-last)))
+				 'tabbar-selected-modified
+			       'tabbar-selected)
+			   (if (buffer-modified-p (tabbar-tab-value (car not-last)))
+			       'tabbar-unselected-modified
+			     'tabbar-unselected)))))
     (concat
-     (propertize "|"
-                 'display (funcall right-fun nil face 25))
-
      (propertize " " 'face face
                  'tabbar-tab tab
                  'local-map keymap
@@ -960,7 +951,17 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
       (tabbar-ruler-fancy-tab-separator ;; default
        (propertize "|"
 		   'display (funcall left-fun face nil 25)))
-      (t tabbar-separator-value)))))
+      (t tabbar-separator-value))
+     (cond
+      ((or (not not-last) (not tabbar-ruler-fancy-tab-separator))
+       "")
+      (tabbar-ruler-fancy-tab-separator
+       (propertize " " 'display (funcall right-fun nil nil 2))))
+     (cond
+      ((or (not not-last) (not tabbar-ruler-fancy-tab-separator))
+       "")
+      (tabbar-ruler-fancy-tab-separator
+       (propertize "|" 'display (funcall right-fun nil next-face 25)))))))
 
 (defsubst tabbar-line-format (tabset)
   "Return the `header-line-format' value to display TABSET."
