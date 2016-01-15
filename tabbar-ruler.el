@@ -345,7 +345,7 @@
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-fancy-tab-separator nil
-  "Separate each tab with a fancy generated image"
+  "Separate each tab with a fancy generated image."
   :type '(choice
 	  (const :tag "Text" nil)
 	  (const :tag "Alternate" alternate)
@@ -366,10 +366,26 @@
   :group 'tabbar-ruler)
 
 
-(defcustom tabbar-ruler-fancy-current-tab-separator nil
+(defcustom tabbar-ruler-fancy-current-tab-separator 'inherit
   "Separate each tab with a fancy generated image"
-  ;; TODO: type same as "tabbar-ruler-fancy-tab-separator"
-  ;; may be inherit
+  :type '(choice
+	  (const :tag "Inherit" inherit)
+	  (const :tag "Text" nil)
+	  (const :tag "Alternate" alternate)
+	  (const :tag "arrow" arrow)
+	  (const :tag "arrow-fade" arrow-fade)
+	  (const :tag "bar" bar)
+	  (const :tag "box" box)
+	  (const :tag "brace" brace)
+	  (const :tag "butt" butt)
+	  (const :tag "chamfer" chamfer)
+	  (const :tag "contour" contour)
+	  (const :tag "curve" curve)
+	  (const :tag "rounded" rounded)
+	  (const :tag "roundstub" roundstub)
+	  (const :tag "slant" slant)
+	  (const :tag "wave" wave)
+	  (const :tag "zigzag" zigzag))
   :group 'tabbar-ruler)
 
 
@@ -877,13 +893,13 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                                                                                 "gray10"))))))
           (keymap (tabbar-make-tab-keymap tab))
           (left-fun
-           (if selected-p
+           (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit)))
                (intern (format "powerline-%s-left" tabbar-ruler-fancy-current-tab-separator))
-               (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator))))
+	     (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator))))
           (right-fun
-           (if selected-p
+           (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit))) 
                (intern (format "powerline-%s-right" tabbar-ruler-fancy-current-tab-separator))
-               (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))))
+	     (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))))
           (face (if selected-p
                     (if modified-p
                         'tabbar-selected-modified
@@ -892,8 +908,10 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                       'tabbar-unselected-modified
                     'tabbar-unselected))))
     (concat
-     (propertize "|"
-                 'display (funcall right-fun nil face 25))
+     (if tabbar-ruler-fancy-tab-separator
+	 (propertize "|"
+		     'display (funcall right-fun nil face 25))
+       "")
 
      (propertize " " 'face face
                  'tabbar-tab tab
