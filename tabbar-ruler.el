@@ -290,6 +290,8 @@
 ;;
 ;;; Code:
 
+(add-to-list 'load-path (file-name-directory (or load-file-name (buffer-file-name))))
+
 (require 'cl)
 (require 'tabbar)
 (require 'easymenu)
@@ -367,7 +369,7 @@
 
 
 (defcustom tabbar-ruler-fancy-current-tab-separator 'inherit
-  "Separate each tab with a fancy generated image"
+  "The current tab can have a different separator."
   :type '(choice
 	  (const :tag "Inherit" inherit)
 	  (const :tag "Text" nil)
@@ -386,6 +388,20 @@
 	  (const :tag "slant" slant)
 	  (const :tag "wave" wave)
 	  (const :tag "zigzag" zigzag))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-tab-padding 5
+  "Separate each tab with this padding. (In pixels)"
+  :type '(choice
+	  (const :tag "No padding" nil)
+	  (integer :tag "Padding in pixels"))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-tab-height nil
+  "Height for tabbar-ruler's separations."
+  :type '(choice
+	  (const :tag "Height of Text" nil)
+	  (integer :tag "Overriding Height"))
   :group 'tabbar-ruler)
 
 
@@ -879,6 +895,18 @@ Pass mouse click events on a tab to `tabbar-click-on-tab'."
     (tabbar-display-update)
     ))))
 
+(defun tabbar-ruler-pad-xpm (width color &optional height)
+  "Generate padding xpm of WIDTH and COLOR with optional HEIGHT."
+  (let* ((height (or height tabbar-ruler-tab-height (pl/separator-height)))
+         (data nil)
+         (i 0))
+    (while (< i height)
+      (setq data (cons
+		  (append (make-list width 1))
+                  data))
+      (setq i (+ i 1)))
+    (pl/make-xpm "sep" color color (reverse data))))
+
 (defsubst tabbar-line-tab (tab &optional not-last sel)
   "Return the display representation of tab TAB.
 That is, a propertized string used as an `header-line-format' template
@@ -910,7 +938,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
     (concat
      (if tabbar-ruler-fancy-tab-separator
 	 (propertize "|"
-		     'display (funcall right-fun nil face 25))
+		     'display (funcall right-fun nil face tabbar-ruler-tab-height))
        "")
 
      (propertize " " 'face face
@@ -977,8 +1005,11 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
      (cond
       (tabbar-ruler-fancy-tab-separator ;; default
        (propertize "|"
-		   'display (funcall left-fun face nil 25)))
-      (t tabbar-separator-value)))))
+		   'display (funcall left-fun face nil tabbar-ruler-tab-height)))
+      (t tabbar-separator-value))
+     (if tabbar-ruler-tab-padding
+	 (propertize " " 'display (funcall #'tabbar-ruler-pad-xpm tabbar-ruler-tab-padding nil))
+       ""))))
 
 (defsubst tabbar-line-format (tabset)
   "Return the `header-line-format' value to display TABSET."
@@ -1040,7 +1071,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 	     (cond
 	      (tabbar-ruler-fancy-tab-separator
 	       (propertize " " 'display (funcall (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))
-						 nil (get-text-property 0 'face (car elts)) 25)))
+						 nil (get-text-property 0 'face (car elts)) tabbar-ruler-tab-height)))
 	      (t ""))
              elts
              (propertize "%-"
