@@ -391,7 +391,8 @@
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-tab-padding 5
-  "Separate each tab with this padding. (In pixels)"
+  "Separate each tab with this padding.
+This is only enabled whin `tabbar-ruler-fancy-tab-separator' is non-nil"
   :type '(choice
 	  (const :tag "No padding" nil)
 	  (integer :tag "Padding in pixels"))
@@ -1007,7 +1008,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
        (propertize "|"
 		   'display (funcall left-fun face nil tabbar-ruler-tab-height)))
       (t tabbar-separator-value))
-     (if tabbar-ruler-tab-padding
+     (if (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding)
 	 (propertize " " 'display (funcall #'tabbar-ruler-pad-xpm tabbar-ruler-tab-padding nil))
        ""))))
 
