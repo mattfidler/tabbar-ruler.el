@@ -597,13 +597,11 @@ argument is the MODE for the new buffer.")
         (if tabbar-ruler-invert-deselected
             (progn
               (copy-face 'tabbar-selected 'tabbar-unselected)
-              (set-face-attribute 'tabbar-selected frame
-                                  :box nil)
+              (set-face-attribute 'tabbar-selected frame)
               (invert-face 'tabbar-selected))
           (set-face-attribute 'tabbar-selected frame
                               :inherit 'mode-line-buffer-id
-                              :background (face-attribute 'mode-line-inactive :background)
-                              :box nil))
+                              :background (face-attribute 'mode-line-inactive :background)))
         (copy-face 'mode-line-buffer-id 'tabbar-unselected-highlight frame)
         (copy-face 'mode-line-inactive 'tabbar-selected-highlight frame))
   (copy-face 'default 'tabbar-selected frame)
@@ -612,30 +610,36 @@ argument is the MODE for the new buffer.")
   (if tabbar-ruler-invert-deselected
       (progn
         (copy-face 'tabbar-selected 'tabbar-unselected)
-        (set-face-attribute 'tabbar-unselected frame
-                            :box nil)
+        (set-face-attribute 'tabbar-unselected frame)
         (invert-face 'tabbar-unselected))
     (set-face-attribute 'tabbar-unselected frame
                         :inherit 'mode-line-buffer-id
-                        :background (face-attribute 'mode-line-inactive :background)
-                        :box nil))
+                        :background (face-attribute 'mode-line-inactive :background)))
   
   
   (copy-face 'mode-line-buffer-id 'tabbar-selected-highlight frame)
   (copy-face 'mode-line-inactive 'tabbar-unselected-highlight frame))
   
   (set-face-attribute 'tabbar-separator frame
-                      :inherit 'tabbar-default
-                      :box nil)
+                      :inherit 'tabbar-default)
   
   (set-face-attribute 'tabbar-button frame
-                      :inherit 'tabbar-default
-                      :box nil))
+                      :inherit 'tabbar-default)
+  (dolist (face '(tabbar-button
+		  tabbar-separator
+		  tabbar-selected
+		  tabbar-selected-highlight
+		  tabbar-selected-modified
+		  tabbar-unselected
+		  tabbar-unselected-highlight
+		  tabbar-unselected-modified))
+    (set-face-attribute face frame
+			:box nil
+			:height (face-attribute 'default :height frame)
+			:width (face-attribute 'default :width frame))))
 
 (add-hook 'after-make-frame-functions 'tabbar-install-faces)
 (add-hook 'emacs-startup-hook 'tabbar-install-faces)
-(tabbar-install-faces)
-
 
 ;; Taken from powerline
 
@@ -1621,6 +1625,10 @@ This was stole/modified from `c-save-buffer-state'"
   "Fix the tabbar selection of a word with the mouse."
   (tabbar-ruler-save-buffer-state
    ad-do-it))
+
+
+(tabbar-install-faces)
+
 
 (provide 'tabbar-ruler)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
