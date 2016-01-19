@@ -397,7 +397,7 @@
 	  (integer :tag "Padding in pixels"))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-tab-height nil
+(defcustom tabbar-ruler-tab-height 25
   "Height for tabbar-ruler's separations."
   :type '(choice
 	  (const :tag "Height of Text" nil)
