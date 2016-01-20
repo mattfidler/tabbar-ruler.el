@@ -605,6 +605,13 @@ argument is the MODE for the new buffer.")
 	  (const :tag "Firefox style" 'firefox))
   :group 'tabbar-ruler)
 
+(defcustom tabbar-ruler-use-variable-pitch t
+  "Use variable pich font.
+
+This copies the :family and :foundry from the `variable-pitch' face."
+  :type 'boolean
+  :group 'tabbar-ruler)
+
 (defun tabbar-ruler-style-firefox (&optional frame)
   "Setup firefox style for FRAME."
   (setq tabbar-ruler-tab-padding 1
@@ -680,7 +687,11 @@ argument is the MODE for the new buffer.")
     (set-face-attribute face frame
 			:box nil
 			:height (face-attribute 'default :height frame)
-			:width (face-attribute 'default :width frame)))
+			:width (face-attribute 'default :width frame))
+    (when tabbar-ruler-use-variable-pitch
+      (set-face-attribute face frame
+			  :family (face-attribute 'variable-pitch :family)
+			  :foundry (face-attribute 'variable-pitch :foundry))))
   (let ((fun (intern (format "tabbar-ruler-style-%s" tabbar-ruler-style))))
     (when (fboundp fun)
       (funcall fun frame))))
