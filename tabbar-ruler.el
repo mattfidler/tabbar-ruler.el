@@ -1045,6 +1045,9 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 	 (background-face (if selected-p
 			      'tabbar-unselected
 			    'tabbar-default))
+	 (next-background-face (if next-selected-p
+				   'tabbar-unselected
+				 'tabbar-default))
 	 (mode-icon (and (featurep 'mode-icons)
 			 (with-current-buffer (tabbar-tab-value tab)
 			   (assoc mode-name mode-icons)))))
@@ -1052,7 +1055,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
     (concat
      (if tabbar-ruler-fancy-tab-separator
 	 (propertize "|"
-		     'display (tabbar-normalize-image (funcall right-fun 'tabbar-default face tabbar-ruler-tab-height) 0)
+		     'display (tabbar-normalize-image (funcall right-fun background-face face tabbar-ruler-tab-height) 0)
 		     'face face)
        nil)
      (propertize " " 'face face
@@ -1142,7 +1145,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
      (cond
       (tabbar-ruler-fancy-tab-separator ;; default
        (propertize "|"
-		   'display (tabbar-normalize-image (funcall left-fun face background-face tabbar-ruler-tab-height) 0)
+		   'display (tabbar-normalize-image (funcall left-fun face next-background-face tabbar-ruler-tab-height) 0)
 		   'face face))
       (t tabbar-separator-value))
      (if (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding
