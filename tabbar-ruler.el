@@ -398,6 +398,18 @@ This is only enabled whin `tabbar-ruler-fancy-tab-separator' is non-nil"
 	  (integer :tag "Padding in pixels"))
   :group 'tabbar-ruler)
 
+(defcustom tabbar-ruler-padding-color nil
+  "Color of padding."
+  :type '(choice
+	  (const :tag "Background color" nil)
+	  (color :tag "Color"))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-pad-selected t
+  "Pad selected tab."
+  :type 'boolean
+  :group 'tabbar-ruler)
+
 (defcustom tabbar-ruler-tab-height 25
   "Height for tabbar-ruler's separations."
   :type '(choice
@@ -585,6 +597,38 @@ argument is the MODE for the new buffer.")
   :type 'boolean
   :group 'tabbar-ruler)
 
+
+(defcustom tabbar-ruler-style 'firefox ;text
+  "Style of tabbar ruler."
+  :type '(choice
+	  (const :tag "Text-mode tabbar" 'text)
+	  (const :tag "Firefox style" 'firefox))
+  :group 'tabbar-ruler)
+
+(defun tabbar-ruler-style-firefox (&optional frame)
+  "Setup firefox style for FRAME."
+  (setq tabbar-ruler-tab-padding 1
+	tabbar-ruler-pad-selected nil
+	tabbar-ruler-padding-color (tabbar-foreground 'tabbar-default)
+	tabbar-ruler-fancy-current-tab-separator 'wave
+	tabbar-ruler-fancy-tab-separator 'bar)
+  (dolist (face '(tabbar-button
+		    tabbar-separator
+		    tabbar-unselected
+		    tabbar-unselected-highlight
+		    tabbar-unselected-modified))
+      (set-face-attribute face frame
+			  :background (tabbar-background 'tabbar-default)
+			  :foreground (tabbar-foreground 'tabbar-default))))
+
+(defun tabbar-ruler-style-text (&optional frame)
+  "Setup text style"
+  (setq tabbar-ruler-tab-padding nil
+	tabbar-ruler-pad-selected nil
+	tabbar-ruler-padding-color nil
+	tabbar-ruler-fancy-current-tab-separator 'inherit
+	tabbar-ruler-fancy-tab-separator nil))
+
 ;;;###autoload
 (defun tabbar-install-faces (&optional frame)
   "Installs faces for a frame."
@@ -636,7 +680,10 @@ argument is the MODE for the new buffer.")
     (set-face-attribute face frame
 			:box nil
 			:height (face-attribute 'default :height frame)
-			:width (face-attribute 'default :width frame))))
+			:width (face-attribute 'default :width frame)))
+  (let ((fun (intern (format "tabbar-ruler-style-%s" tabbar-ruler-style))))
+    (when (fboundp fun)
+      (funcall fun frame))))
 
 (add-hook 'after-make-frame-functions 'tabbar-install-faces)
 (add-hook 'emacs-startup-hook 'tabbar-install-faces)
@@ -910,42 +957,69 @@ Pass mouse click events on a tab to `tabbar-click-on-tab'."
 		  (append (make-list width 1))
                   data))
       (setq i (+ i 1)))
-    (pl/make-xpm "sep" color color (reverse data))))
+    (pl/make-xpm "sep" color color data)))
+
+(defun tabbar-background-- (int)
+  "Convert INT to 2 digit hex."
+  (substring (format "%02X" int) -2))
+
+(defun tabbar-background (face &optional foreground)
+  "Gets hex background of FACE.
+When FOREGROUND is non-nil, get the foreground instead."
+  (let ((color (or (and (facep face)
+			(or (and foreground (face-foreground face nil 'default))
+			    (face-background face nil 'default)))
+		   (and (stringp face) face))))
+    (when (member color (x-defined-colors))
+      (setq color (x-color-values color)
+	    color (concat"#"
+			 (tabbar-background--(nth 0 color))
+			 (tabbar-background--(nth 1 color))
+			 (tabbar-background--(nth 2 color)))))
+    color))
+
+(defun tabbar-foreground (face)
+  "Gets hex foreground of FACE."
+  (tabbar-background face t))
+
 
 (defsubst tabbar-line-tab (tab &optional not-last sel)
   "Return the display representation of tab TAB.
 That is, a propertized string used as an `header-line-format' template
 element.
 Call `tabbar-tab-label-function' to obtain a label for TAB."
-  (let* ( (selected-p (tabbar-selected-p tab (tabbar-current-tabset)))
-          (modified-p (buffer-modified-p (tabbar-tab-value tab)))
-          (close-button-image (tabbar-find-image 
-                               `((:type xpm :data ,(tabbar-ruler-image :type 'close :disabled (not modified-p)
-                                                                       :color (if (eq tab sel)
-                                                                                  (face-attribute 'default :foreground)
-                                                                                "gray10"))))))
-          (keymap (tabbar-make-tab-keymap tab))
-          (left-fun
-           (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit)))
-               (intern (format "powerline-%s-left" tabbar-ruler-fancy-current-tab-separator))
-	     (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator))))
-          (right-fun
-           (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit))) 
-               (intern (format "powerline-%s-right" tabbar-ruler-fancy-current-tab-separator))
-	     (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))))
-          (face (if selected-p
-                    (if modified-p
-                        'tabbar-selected-modified
-                      'tabbar-selected)
-                  (if modified-p
-                      'tabbar-unselected-modified
-                    'tabbar-unselected))))
+  (let* ((selected-p (tabbar-selected-p tab (tabbar-current-tabset)))
+	 (next-selected-p (and not-last (tabbar-selected-p (car not-last) (tabbar-current-tabset))))
+	 (modified-p (buffer-modified-p (tabbar-tab-value tab)))
+	 (close-button-image (tabbar-find-image 
+			      `((:type xpm :data ,(tabbar-ruler-image :type 'close :disabled (not modified-p)
+								      :color (if (eq tab sel)
+										 (face-attribute 'default :foreground)
+									       "gray10"))))))
+	 (keymap (tabbar-make-tab-keymap tab))
+	 (left-fun
+	  (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit)))
+	      (intern (format "powerline-%s-left" tabbar-ruler-fancy-current-tab-separator))
+	    (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator))))
+	 (right-fun
+	  (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit))) 
+	      (intern (format "powerline-%s-right" tabbar-ruler-fancy-current-tab-separator))
+	    (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))))
+	 (face (if selected-p
+		   (if modified-p
+		       'tabbar-selected-modified
+		     'tabbar-selected)
+		 (if modified-p
+		     'tabbar-unselected-modified
+		   'tabbar-unselected)))
+	 (background-face (if selected-p
+			      'tabbar-unselected
+			    'tabbar-default)))
     (concat
      (if tabbar-ruler-fancy-tab-separator
 	 (propertize "|"
-		     'display (funcall right-fun nil face tabbar-ruler-tab-height))
+		     'display (funcall right-fun 'tabbar-default face tabbar-ruler-tab-height))
        "")
-
      (propertize " " 'face face
                  'tabbar-tab tab
                  'local-map keymap
@@ -1010,10 +1084,12 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
      (cond
       (tabbar-ruler-fancy-tab-separator ;; default
        (propertize "|"
-		   'display (funcall left-fun face nil tabbar-ruler-tab-height)))
+		   'display (funcall left-fun face background-face tabbar-ruler-tab-height)))
       (t tabbar-separator-value))
-     (if (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding)
-	 (propertize " " 'display (funcall #'tabbar-ruler-pad-xpm tabbar-ruler-tab-padding nil))
+     (if (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding
+	      (or (not selected-p) (and selected-p tabbar-ruler-pad-selected))
+	      (or (not next-selected-p) (and next-selected-p tabbar-ruler-pad-selected)))
+	 (propertize " " 'display (funcall #'tabbar-ruler-pad-xpm tabbar-ruler-tab-padding (tabbar-background (or tabbar-ruler-padding-color 'tabbar-default))))
        ""))))
 
 (defsubst tabbar-line-format (tabset)
