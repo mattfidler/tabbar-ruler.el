@@ -634,7 +634,17 @@ This copies the :family and :foundry from the `variable-pitch' face."
 		    tabbar-unselected-modified))
       (set-face-attribute face frame
 			  :background (tabbar-background 'tabbar-default)
-			  :foreground (tabbar-foreground 'tabbar-default))))
+			  :foreground (tabbar-foreground 'tabbar-default)))
+  (dolist (face '(tabbar-button
+		  tabbar-separator
+		  tabbar-selected
+		  tabbar-selected-highlight
+		  tabbar-selected-modified
+		  tabbar-unselected
+		  tabbar-unselected-highlight
+		  tabbar-unselected-modified))
+    (set-face-attribute face frame
+			:height (expt 1.2 -1))))
 
 (defun tabbar-ruler-style-firefox-circle (&optional frame)
   "Setup firefox with closed image for FRAME."
