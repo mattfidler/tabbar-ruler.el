@@ -12,7 +12,7 @@
 ;; URL: http://github.com/mlf176f2/tabbar-ruler.el
 ;; Keywords: Tabbar, Ruler Mode, Menu, Tool Bar.
 ;; Compatibility: Windows Emacs 23.x
-;; Package-Requires: ((tabbar "2.0.1") (powerline "2.3"))
+;; Package-Requires: ((tabbar "2.0.1") (powerline "2.3") (mode-icons "0.1.0"))
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -295,7 +295,8 @@
 (require 'cl)
 (require 'tabbar)
 (require 'easymenu)
-(require 'powerline nil t)
+(require 'powerline)
+(require 'mode-icons)
 
 (defgroup tabbar-ruler nil
   "Pretty tabbar, autohide, use both tabbar/ruler."
@@ -344,6 +345,11 @@
 (defcustom tabbar-ruler-fight-igore-modes '(info-mode helm-mode package-menu-mode)
   "Exclude these mode when changing between tabbar and ruler."
   :type '(repeat (symbol :tag "Major Mode"))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-use-mode-icons t
+  "Use Mode icons for tabbar-ruler"
+  :type 'boolean
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-fancy-tab-separator nil
@@ -598,11 +604,12 @@ argument is the MODE for the new buffer.")
   :group 'tabbar-ruler)
 
 
-(defcustom tabbar-ruler-style 'firefox
+(defcustom tabbar-ruler-style 'firefox-circle
   "Style of tabbar ruler."
   :type '(choice
 	  (const :tag "Text-mode tabbar" 'text)
-	  (const :tag "Firefox style" 'firefox))
+	  (const :tag "Firefox style" 'firefox)
+	  (const :tag "Firefox with circle close" 'firefox-circle))
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-use-variable-pitch t
@@ -618,7 +625,8 @@ This copies the :family and :foundry from the `variable-pitch' face."
 	tabbar-ruler-pad-selected nil
 	tabbar-ruler-padding-color (tabbar-foreground 'tabbar-default)
 	tabbar-ruler-fancy-current-tab-separator 'wave
-	tabbar-ruler-fancy-tab-separator 'bar)
+	tabbar-ruler-fancy-tab-separator 'bar
+	tabbar-ruler-fancy-close-image nil)
   (dolist (face '(tabbar-button
 		    tabbar-separator
 		    tabbar-unselected
@@ -628,13 +636,19 @@ This copies the :family and :foundry from the `variable-pitch' face."
 			  :background (tabbar-background 'tabbar-default)
 			  :foreground (tabbar-foreground 'tabbar-default))))
 
+(defun tabbar-ruler-style-firefox-circle (&optional frame)
+  "Setup firefox with closed image for FRAME."
+  (tabbar-ruler-style-firefox)
+  (setq tabbar-ruler-fancy-close-image t))
+
 (defun tabbar-ruler-style-text (&optional frame)
-  "Setup text style"
+  "Setup text style."
   (setq tabbar-ruler-tab-padding nil
 	tabbar-ruler-pad-selected nil
 	tabbar-ruler-padding-color nil
 	tabbar-ruler-fancy-current-tab-separator 'inherit
-	tabbar-ruler-fancy-tab-separator nil))
+	tabbar-ruler-fancy-tab-separator nil
+	tabbar-ruler-fancy-close-image nil))
 
 ;;;###autoload
 (defun tabbar-install-faces (&optional frame)
@@ -692,6 +706,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
       (set-face-attribute face frame
 			  :family (face-attribute 'variable-pitch :family)
 			  :foundry (face-attribute 'variable-pitch :foundry))))
+  (tabbar-ruler-remove-caches)
   (let ((fun (intern (format "tabbar-ruler-style-%s" tabbar-ruler-style))))
     (when (fboundp fun)
       (funcall fun frame))))
@@ -734,12 +749,15 @@ frame-local."
              ,val-sym
            (puthash ,args-sym (apply ,func ,args-sym) ,cache-sym))))))
 
-(defun* tabbar-ruler-image (&key type disabled color)
+(defun* tabbar-ruler-image (&key type disabled color face)
   "Returns the scroll-images"
-  (let ((clr2 (if disabled (tabbar-hex-color (face-attribute 'mode-line-inactive :background))
-                (tabbar-hex-color (face-attribute 'mode-line :background))))
-        (clr (or color (if disabled (tabbar-hex-color (face-attribute 'mode-line-inactive :foreground))
-                         (tabbar-hex-color (face-attribute 'mode-line :foreground))))))
+  (let ((clr2 (or (and face (facep face) (tabbar-background face))
+		  (and disabled (tabbar-hex-color (face-attribute 'mode-line-inactive :background)))
+		  (tabbar-hex-color (face-attribute 'mode-line :background))))
+        (clr (or color
+		 (and face (facep face) (tabbar-foreground face))
+		 (and disabled (tabbar-hex-color (face-attribute 'mode-line-inactive :foreground)))
+		 (tabbar-hex-color (face-attribute 'mode-line :foreground)))))
     (if (eq type 'close)
         (format "/* XPM */
         static char * close_tab_xpm[] = {
@@ -1005,11 +1023,6 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
   (let* ((selected-p (tabbar-selected-p tab (tabbar-current-tabset)))
 	 (next-selected-p (and not-last (tabbar-selected-p (car not-last) (tabbar-current-tabset))))
 	 (modified-p (buffer-modified-p (tabbar-tab-value tab)))
-	 (close-button-image (tabbar-find-image 
-			      `((:type xpm :data ,(tabbar-ruler-image :type 'close :disabled (not modified-p)
-								      :color (if (eq tab sel)
-										 (face-attribute 'default :foreground)
-									       "gray10"))))))
 	 (keymap (tabbar-make-tab-keymap tab))
 	 (left-fun
 	  (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit)))
@@ -1026,9 +1039,16 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 		 (if modified-p
 		     'tabbar-unselected-modified
 		   'tabbar-unselected)))
+	 (close-button-image (tabbar-find-image 
+			      `((:type xpm :data ,(tabbar-ruler-image :type 'close :disabled (not modified-p)
+								      :face face)))))
 	 (background-face (if selected-p
 			      'tabbar-unselected
-			    'tabbar-default)))
+			    'tabbar-default))
+	 (mode-icon (and (featurep 'mode-icons)
+			 (with-current-buffer (tabbar-tab-value tab)
+			   (assoc mode-name mode-icons)))))
+    (setq close-button-image (tabbar-normalize-image close-button-image 0 face))
     (concat
      (if tabbar-ruler-fancy-tab-separator
 	 (propertize "|"
@@ -1041,6 +1061,29 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                  'help-echo 'tabbar-help-on-tab
                  'face face
                  'pointer 'hand)
+     
+     (when (and window-system tabbar-ruler-use-mode-icons
+		mode-icon)
+       (propertize " "
+		   'display (create-image
+			     (mode-icons-get-icon-file
+			      (concat (nth 1 mode-icon) "." (symbol-name (nth 2 mode-icon))))
+			     (nth 2 mode-icon) nil
+			     :ascent 'center
+			     :face face)
+		   'face face
+		   'tabbar-tab tab
+		   'local-map keymap
+		   'help-echo 'tabbar-help-on-tab
+		   'pointer 'hand))
+     (when (and window-system tabbar-ruler-use-mode-icons
+		mode-icon)
+       (propertize " " 'face face
+		   'tabbar-tab tab
+		   'local-map keymap
+		   'help-echo 'tabbar-help-on-tab
+		   'pointer 'hand))
+     
      (propertize 
       (if tabbar-tab-label-function
           (funcall tabbar-tab-label-function tab)
@@ -1076,7 +1119,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                               (insert-char #x00D7)
                             (error (insert "x")))))
                        (buffer-string))
-                     'display (tabbar-normalize-image close-button-image 0)
+                     'display close-button-image
                      'face face
                      'pointer 'hand
                      'tabbar-tab tab
