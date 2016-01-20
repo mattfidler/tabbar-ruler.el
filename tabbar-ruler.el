@@ -598,7 +598,7 @@ argument is the MODE for the new buffer.")
   :group 'tabbar-ruler)
 
 
-(defcustom tabbar-ruler-style 'firefox ;text
+(defcustom tabbar-ruler-style 'text
   "Style of tabbar ruler."
   :type '(choice
 	  (const :tag "Text-mode tabbar" 'text)
@@ -1030,7 +1030,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
      (if tabbar-ruler-fancy-tab-separator
 	 (propertize "|"
 		     'display (funcall right-fun 'tabbar-default face tabbar-ruler-tab-height))
-       "")
+       nil)
      (propertize " " 'face face
                  'tabbar-tab tab
                  'local-map keymap
@@ -1101,7 +1101,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 	      (or (not selected-p) (and selected-p tabbar-ruler-pad-selected))
 	      (or (not next-selected-p) (and next-selected-p tabbar-ruler-pad-selected)))
 	 (propertize " " 'display (funcall #'tabbar-ruler-pad-xpm tabbar-ruler-tab-padding (tabbar-background (or tabbar-ruler-padding-color 'tabbar-default))))
-       ""))))
+       nil))))
 
 (defsubst tabbar-line-format (tabset)
   "Return the `header-line-format' value to display TABSET."
