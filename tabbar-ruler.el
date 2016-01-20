@@ -598,7 +598,7 @@ argument is the MODE for the new buffer.")
   :group 'tabbar-ruler)
 
 
-(defcustom tabbar-ruler-style 'text
+(defcustom tabbar-ruler-style 'firefox
   "Style of tabbar ruler."
   :type '(choice
 	  (const :tag "Text-mode tabbar" 'text)
@@ -851,20 +851,23 @@ clr
   (cons (cons " >" tabbar-scroll-right-button-enabled-image)
         (cons " =" tabbar-scroll-right-button-disabled-image)))
 
-(defsubst tabbar-normalize-image (image &optional margin mask)
+(defsubst tabbar-normalize-image (image &optional margin face mask)
   "Make IMAGE centered and transparent.
 If optional MARGIN is non-nil, it must be a number of pixels to add as
 an extra margin around the image.  If optional MASK is non-nil, mask
 property is included."
-  (let ((plist (cdr image)))
+  (let ((plist (cdr image))
+	(face (or face 'tabbar-default)))
     (or (plist-get plist :ascent)
         (setq plist (plist-put plist :ascent 'center)))
     (or (plist-get plist :mask)
         (when mask
           (setq plist (plist-put plist :mask '(heuristic t)))))
     (or (not (natnump margin))
-        (plist-get plist :margin)
+        ;; (plist-get plist :margin)
         (plist-put plist :margin margin))
+    (and (facep face)
+	 (plist-put plist :face face))
     (setcdr image plist))
   image)
 
@@ -1029,7 +1032,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
     (concat
      (if tabbar-ruler-fancy-tab-separator
 	 (propertize "|"
-		     'display (funcall right-fun 'tabbar-default face tabbar-ruler-tab-height))
+		     'display (tabbar-normalize-image (funcall right-fun 'tabbar-default face tabbar-ruler-tab-height) 0)
+		     'face face)
        nil)
      (propertize " " 'face face
                  'tabbar-tab tab
@@ -1095,12 +1099,14 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
      (cond
       (tabbar-ruler-fancy-tab-separator ;; default
        (propertize "|"
-		   'display (funcall left-fun face background-face tabbar-ruler-tab-height)))
+		   'display (tabbar-normalize-image (funcall left-fun face background-face tabbar-ruler-tab-height) 0)
+		   'face face))
       (t tabbar-separator-value))
      (if (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding
 	      (or (not selected-p) (and selected-p tabbar-ruler-pad-selected))
 	      (or (not next-selected-p) (and next-selected-p tabbar-ruler-pad-selected)))
-	 (propertize " " 'display (funcall #'tabbar-ruler-pad-xpm tabbar-ruler-tab-padding (tabbar-background (or tabbar-ruler-padding-color 'tabbar-default))))
+	 (propertize " " 'display (tabbar-normalize-image (tabbar-ruler-pad-xpm tabbar-ruler-tab-padding (tabbar-background (or tabbar-ruler-padding-color 'tabbar-default) 0)) 0 background-face)
+		     'face background-face)
        nil))))
 
 (defsubst tabbar-line-format (tabset)
