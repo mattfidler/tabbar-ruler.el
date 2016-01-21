@@ -918,18 +918,24 @@ mouse click event, and TAB.
 Optional argument TYPE is a mouse click event type (see the function
 `tabbar-make-mouse-event' for details)."
   (let* ((mouse-event (tabbar-make-mouse-event type))
-         (mouse-button (event-basic-type mouse-event)))
-    (if  (eq mouse-button 'mouse-3)
-        (progn
-          (setq tabbar-last-tab tab)
-          (tabbar-context-menu))
-      (if (eq action 'close-tab)
-          (when (and (eq mouse-button 'mouse-1) tabbar-close-tab-function)
-            (funcall tabbar-close-tab-function tab))
-        (when tabbar-select-tab-function
-          (funcall tabbar-select-tab-function
-                   (tabbar-make-mouse-event type) tab)
-          (tabbar-display-update))))))
+         (mouse-button (event-basic-type mouse-event))
+	 tmp)
+    (cond
+	 ((eq mouse-button 'mouse-3)
+	  (setq tabbar-last-tab tab)
+	  (tabbar-context-menu))
+       ((eq action 'close-tab)
+	(when (and (eq mouse-button 'mouse-1) tabbar-close-tab-function)
+	  (funcall tabbar-close-tab-function tab)))
+       ((and (eq action 'icon) (setq tmp (key-binding [menu-bar languages])))
+	(with-current-buffer (tabbar-tab-value tab)
+	  (popup-menu tmp))
+	(tabbar-ruler-modification-state-change)
+	(tabbar-display-update))
+       (t (when tabbar-select-tab-function
+	    (funcall tabbar-select-tab-function
+		     (tabbar-make-mouse-event type) tab)
+	    (tabbar-display-update))))))
 
 (defun tabbar-reset ()
   "Reset memoized functions."
