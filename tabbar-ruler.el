@@ -593,6 +593,19 @@ static char * c:\tmp\emacs_xpm[] = {
      :active (and (buffer-file-name (tabbar-tab-value tabbar-last-tab))
                   (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab))))]
     "--"
+    ["Copy full path" tabbar-popup-copy-path
+     :active (and (buffer-file-name (tabbar-tab-value tabbar-last-tab))
+                  (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab))))
+     ]
+    ["Copy directory path" tabbar-popup-copy-dir
+     :active (and (buffer-file-name (tabbar-tab-value tabbar-last-tab))
+                  (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab))))
+     ]
+    ["Copy file-name" tabbar-popup-copy-file
+     :active (and (buffer-file-name (tabbar-tab-value tabbar-last-tab))
+                  (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab))))
+     ]
+    "--"
     ["Gzip File" tabbar-popup-gz
      :active (and (executable-find "gzip")
                   (buffer-file-name (tabbar-tab-value tabbar-last-tab))
@@ -663,6 +676,30 @@ static char * c:\tmp\emacs_xpm[] = {
         (set-buffer-modified-p nil)
         (kill-buffer (current-buffer))
         (delete-file fn)))))
+
+
+(defun tabbar-popup-copy-path ()
+  "Tab-bar copy path"
+  (interactive)
+  (let* ((buf (tabbar-tab-value tabbar-last-tab))
+         (fn (buffer-file-name buf)))
+    (kill-new fn)))
+
+
+(defun tabbar-popup-copy-file ()
+  "Tab-bar copy file name"
+  (interactive)
+  (let* ((buf (tabbar-tab-value tabbar-last-tab))
+         (fn (buffer-file-name buf)))
+    (kill-new (file-name-nondirectory fn))))
+
+
+(defun tabbar-popup-copy-dir ()
+  "Tab-bar copy directory"
+  (interactive)
+  (let* ((buf (tabbar-tab-value tabbar-last-tab))
+         (fn (buffer-file-name buf)))
+    (kill-new (file-name-directory fn))))
 
 (defun tabbar-popup-remove-compression-ext (file-name &optional new-compression)
   "Removes compression extension, and possibly adds a new extension"
