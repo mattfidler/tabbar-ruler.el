@@ -604,9 +604,10 @@ argument is the MODE for the new buffer.")
   :group 'tabbar-ruler)
 
 
-(defcustom tabbar-ruler-style 'firefox-circle
+(defcustom tabbar-ruler-style nil
   "Style of tabbar ruler."
   :type '(choice
+	  (const :tag "Let variables decide" nil)
 	  (const :tag "Text-mode tabbar" 'text)
 	  (const :tag "Firefox style" 'firefox)
 	  (const :tag "Firefox with circle close" 'firefox-circle))
@@ -717,9 +718,10 @@ This copies the :family and :foundry from the `variable-pitch' face."
 			  :family (face-attribute 'variable-pitch :family)
 			  :foundry (face-attribute 'variable-pitch :foundry))))
   (tabbar-ruler-remove-caches)
-  (let ((fun (intern (format "tabbar-ruler-style-%s" tabbar-ruler-style))))
-    (when (fboundp fun)
-      (funcall fun frame))))
+  (when tabbar-ruler-style
+    (let ((fun (intern (format "tabbar-ruler-style-%s" tabbar-ruler-style))))
+      (when (fboundp fun)
+	(funcall fun frame)))))
 
 (add-hook 'after-make-frame-functions 'tabbar-install-faces)
 (add-hook 'emacs-startup-hook 'tabbar-install-faces)
