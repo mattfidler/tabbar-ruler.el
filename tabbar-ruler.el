@@ -296,7 +296,7 @@
 (require 'tabbar)
 (require 'easymenu)
 (require 'powerline)
-(require 'mode-icons)
+(require 'mode-icons nil t)
 
 (defgroup tabbar-ruler nil
   "Pretty tabbar, autohide, use both tabbar/ruler."
@@ -396,7 +396,7 @@
 	  (const :tag "zigzag" zigzag))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-tab-padding 5
+(defcustom tabbar-ruler-tab-padding 2
   "Separate each tab with this padding.
 This is only enabled whin `tabbar-ruler-fancy-tab-separator' is non-nil"
   :type '(choice
@@ -404,9 +404,10 @@ This is only enabled whin `tabbar-ruler-fancy-tab-separator' is non-nil"
 	  (integer :tag "Padding in pixels"))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-padding-color nil
-  "Color of padding."
+(defcustom tabbar-ruler-padding-face nil
+  "Color/Face of padding."
   :type '(choice
+	  (face :tag "Face")
 	  (const :tag "Background color" nil)
 	  (color :tag "Color"))
   :group 'tabbar-ruler)
@@ -624,7 +625,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
   "Setup firefox style for FRAME."
   (setq tabbar-ruler-tab-padding 1
 	tabbar-ruler-pad-selected nil
-	tabbar-ruler-padding-color (tabbar-foreground 'tabbar-default)
+	tabbar-ruler-padding-face (tabbar-foreground 'tabbar-default)
 	tabbar-ruler-fancy-current-tab-separator 'wave
 	tabbar-ruler-fancy-tab-separator 'bar
 	tabbar-ruler-fancy-close-image nil)
@@ -636,16 +637,17 @@ This copies the :family and :foundry from the `variable-pitch' face."
       (set-face-attribute face frame
 			  :background (tabbar-background 'tabbar-default)
 			  :foreground (tabbar-foreground 'tabbar-default)))
-  (dolist (face '(tabbar-button
-		  tabbar-separator
-		  tabbar-selected
-		  tabbar-selected-highlight
-		  tabbar-selected-modified
-		  tabbar-unselected
-		  tabbar-unselected-highlight
-		  tabbar-unselected-modified))
-    (set-face-attribute face frame
-			:height (expt 1.2 -1))))
+  ;; (dolist (face '(tabbar-button
+  ;; 		  tabbar-separator
+  ;; 		  tabbar-selected
+  ;; 		  tabbar-selected-highlight
+  ;; 		  tabbar-selected-modified
+  ;; 		  tabbar-unselected
+  ;; 		  tabbar-unselected-highlight
+  ;; 		  tabbar-unselected-modified))
+  ;;   (set-face-attribute face frame
+  ;; 			:height (expt 1.2 -1)))
+  )
 
 (defun tabbar-ruler-style-firefox-circle (&optional frame)
   "Setup firefox with closed image for FRAME."
@@ -656,7 +658,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
   "Setup text style."
   (setq tabbar-ruler-tab-padding nil
 	tabbar-ruler-pad-selected nil
-	tabbar-ruler-padding-color nil
+	tabbar-ruler-padding-face nil
 	tabbar-ruler-fancy-current-tab-separator 'inherit
 	tabbar-ruler-fancy-tab-separator nil
 	tabbar-ruler-fancy-close-image nil))
@@ -1027,6 +1029,65 @@ When FOREGROUND is non-nil, get the foreground instead."
   (tabbar-background face t))
 
 
+(defun tabbar-line-right-separator (selected-p face background-face &optional dir
+					       normalize-face)
+  "Right separator for tabbar.
+SELECTED-P tells if the item is seleceted."
+  (when tabbar-ruler-fancy-tab-separator
+    (let* ((dir (or dir "right"))
+	   (fun
+	    (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit))) 
+		(intern (format "powerline-%s-%s" tabbar-ruler-fancy-current-tab-separator dir))
+	      (intern (format "powerline-%s-%s" tabbar-ruler-fancy-tab-separator dir))))
+	   (normalize-face (or normalize-face face)))
+      (propertize "|"
+		  'display (tabbar-normalize-image (funcall fun background-face face tabbar-ruler-tab-height) 0 normalize-face)
+		  'face normalize-face))))
+
+(defun tabbar-line-left-separator (selected-p face background-face)
+  "Left separator for tabbar."
+  (or (tabbar-line-right-separator selected-p background-face face "left" face)
+      tabbar-separator-value))
+
+(defvar tabbar-line-mode-icon nil)
+(defun tabbar-line-mode-icon (tab face keymap)
+  "Create mode icon for TAB using FACE and KEYMAP"
+  (setq tabbar-line-mode-icon nil)
+  (when (and window-system tabbar-ruler-use-mode-icons (featurep 'mode-icons))
+    (let ((mode-icon (with-current-buffer (tabbar-tab-value tab)
+		       (assoc mode-name mode-icons))))
+      (when mode-icon
+	(setq tabbar-line-mode-icon (propertize " " 'face face
+						'tabbar-tab tab
+						'local-map keymap
+						'help-echo 'tabbar-help-on-tab
+						'face face
+						'pointer 'hand
+						'tabbar-action 'icon))
+	 (propertize " "
+		   'display (create-image
+			     (mode-icons-get-icon-file
+			      (concat (nth 1 mode-icon) "." (symbol-name (nth 2 mode-icon))))
+			     (nth 2 mode-icon) nil
+			     :ascent 'center
+			     :face face)
+		   'face face
+		   'tabbar-tab tab
+		   'local-map keymap
+		   'help-echo 'tabbar-help-on-tab
+		   'pointer 'hand
+		   'tabbar-action 'icon)))))
+
+(defun tabbar-line-padding (selected-p next-selected-p background-face)
+  (when (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding
+	     (or (not selected-p) (and selected-p tabbar-ruler-pad-selected))
+	     (or (not next-selected-p) (and next-selected-p tabbar-ruler-pad-selected)))
+    (propertize " " 'display (tabbar-normalize-image
+			      (tabbar-ruler-pad-xpm
+			       tabbar-ruler-tab-padding
+			       (tabbar-background (or tabbar-ruler-padding-face background-face))) 0 background-face)
+		'face background-face)))
+
 (defsubst tabbar-line-tab (tab &optional not-last sel)
   "Return the display representation of tab TAB.
 That is, a propertized string used as an `header-line-format' template
@@ -1040,10 +1101,6 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 	  (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit)))
 	      (intern (format "powerline-%s-left" tabbar-ruler-fancy-current-tab-separator))
 	    (intern (format "powerline-%s-left" tabbar-ruler-fancy-tab-separator))))
-	 (right-fun
-	  (if (and selected-p (not (eq tabbar-ruler-fancy-current-tab-separator 'inherit))) 
-	      (intern (format "powerline-%s-right" tabbar-ruler-fancy-current-tab-separator))
-	    (intern (format "powerline-%s-right" tabbar-ruler-fancy-tab-separator))))
 	 (face (if selected-p
 		   (if modified-p
 		       'tabbar-selected-modified
@@ -1054,22 +1111,15 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
 	 (close-button-image (tabbar-find-image 
 			      `((:type xpm :data ,(tabbar-ruler-image :type 'close :disabled (not modified-p)
 								      :face face)))))
-	 (background-face (if selected-p
-			      'tabbar-unselected
-			    'tabbar-default))
-	 (next-background-face (if next-selected-p
-				   'tabbar-unselected
-				 'tabbar-default))
+	 (background-face 'tabbar-default)
+	 (next-background-face 'tabbar-default)
 	 (mode-icon (and (featurep 'mode-icons)
 			 (with-current-buffer (tabbar-tab-value tab)
-			   (assoc mode-name mode-icons)))))
+			   (assoc mode-name mode-icons))))
+	 (pad-face (or tabbar-ruler-padding-face background-face)))
     (setq close-button-image (tabbar-normalize-image close-button-image 0 face))
     (concat
-     (if tabbar-ruler-fancy-tab-separator
-	 (propertize "|"
-		     'display (tabbar-normalize-image (funcall right-fun background-face face tabbar-ruler-tab-height) 0)
-		     'face face)
-       nil)
+     (tabbar-line-right-separator selected-p face background-face)
      (propertize " " 'face face
                  'tabbar-tab tab
                  'local-map keymap
@@ -1077,28 +1127,8 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                  'face face
                  'pointer 'hand)
      
-     (when (and window-system tabbar-ruler-use-mode-icons
-		mode-icon)
-       (propertize " "
-		   'display (create-image
-			     (mode-icons-get-icon-file
-			      (concat (nth 1 mode-icon) "." (symbol-name (nth 2 mode-icon))))
-			     (nth 2 mode-icon) nil
-			     :ascent 'center
-			     :face face)
-		   'face face
-		   'tabbar-tab tab
-		   'local-map keymap
-		   'help-echo 'tabbar-help-on-tab
-		   'pointer 'hand))
-     (when (and window-system tabbar-ruler-use-mode-icons
-		mode-icon)
-       (propertize " " 'face face
-		   'tabbar-tab tab
-		   'local-map keymap
-		   'help-echo 'tabbar-help-on-tab
-		   'pointer 'hand))
-     
+     (tabbar-line-mode-icon tab face keymap)
+     tabbar-line-mode-icon
      (propertize 
       (if tabbar-tab-label-function
           (funcall tabbar-tab-label-function tab)
@@ -1154,18 +1184,9 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
         'tabbar-tab tab
         'local-map keymap
         'tabbar-action 'close-tab))
-     (cond
-      (tabbar-ruler-fancy-tab-separator ;; default
-       (propertize "|"
-		   'display (tabbar-normalize-image (funcall left-fun face next-background-face tabbar-ruler-tab-height) 0)
-		   'face face))
-      (t tabbar-separator-value))
-     (if (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding
-	      (or (not selected-p) (and selected-p tabbar-ruler-pad-selected))
-	      (or (not next-selected-p) (and next-selected-p tabbar-ruler-pad-selected)))
-	 (propertize " " 'display (tabbar-normalize-image (tabbar-ruler-pad-xpm tabbar-ruler-tab-padding (tabbar-background (or tabbar-ruler-padding-color 'tabbar-default) 0)) 0 background-face)
-		     'face background-face)
-       nil))))
+     (tabbar-line-left-separator selected-p face background-face)
+     (tabbar-line-padding selected-p next-selected-p 'tabbar-default)
+     )))
 
 (defsubst tabbar-line-format (tabset)
   "Return the `header-line-format' value to display TABSET."
