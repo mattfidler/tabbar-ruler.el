@@ -352,6 +352,11 @@
   :type 'boolean
   :group 'tabbar-ruler)
 
+(defcustom tabbar-ruler-mode-icon-for-unknown-modes t
+  "Use mode icons for unknown modes."
+  :type 'boolean
+  :group 'tabbar-ruler)
+
 (defcustom tabbar-ruler-fancy-tab-separator nil
   "Separate each tab with a fancy generated image."
   :type '(choice
@@ -445,6 +450,132 @@ argument is the MODE for the new buffer.")
 
 (defvar tabbar-last-tab nil)
 (defvar tabbar-ruler-keep-tabbar nil)
+
+
+(defvar mode-icon-unknown
+  "/* XPM */
+static char * c:\tmp\emacs_xpm[] = {
+\"16 16 103 2\",
+\"  	c None\",
+\". 	c #707070\",
+\"+ 	c #717171\",
+\"@ 	c #727272\",
+\"# 	c #6C6C6C\",
+\"$ 	c #696969\",
+\"% 	c #6E6E6E\",
+\"& 	c #7C7C7C\",
+\"* 	c #858585\",
+\"= 	c #969696\",
+\"- 	c #A3A3A3\",
+\"; 	c #A7A7A7\",
+\"> 	c #9A9A9A\",
+\", 	c #747474\",
+\"' 	c #838383\",
+\") 	c #A5A5A5\",
+\"! 	c #ACACAC\",
+\"~ 	c #A8A8A8\",
+\"{ 	c #A9A9A9\",
+\"] 	c #B0B0B0\",
+\"^ 	c #C5C5C5\",
+\"/ 	c #F5F5F5\",
+\"( 	c #D8D8D8\",
+\"_ 	c #777777\",
+\": 	c #C6C6C6\",
+\"< 	c #F7F7F7\",
+\"[ 	c #F1F1F1\",
+\"} 	c #F2F2F2\",
+\"| 	c #ECECEC\",
+\"1 	c #E4E4E4\",
+\"2 	c #DEDEDE\",
+\"3 	c #F4F4F4\",
+\"4 	c #FBFBFB\",
+\"5 	c #8F8F8F\",
+\"6 	c #6B6B6B\",
+\"7 	c #AFAFAF\",
+\"8 	c #F3F3F3\",
+\"9 	c #E8E8E8\",
+\"0 	c #C4C4C4\",
+\"a 	c #CCCCCC\",
+\"b 	c #D3D3D3\",
+\"c 	c #B7B7B7\",
+\"d 	c #737373\",
+\"e 	c #757575\",
+\"f 	c #828282\",
+\"g 	c #909090\",
+\"h 	c #C3C3C3\",
+\"i 	c #EEEEEE\",
+\"j 	c #BDBDBD\",
+\"k 	c #A1A1A1\",
+\"l 	c #979797\",
+\"m 	c #888888\",
+\"n 	c #8B8B8B\",
+\"o 	c #959595\",
+\"p 	c #BCBCBC\",
+\"q 	c #E6E6E6\",
+\"r 	c #C7C7C7\",
+\"s 	c #8A8A8A\",
+\"t 	c #818181\",
+\"u 	c #7A7A7A\",
+\"v 	c #BABABA\",
+\"w 	c #D1D1D1\",
+\"x 	c #DBDBDB\",
+\"y 	c #D7D7D7\",
+\"z 	c #DCDCDC\",
+\"A 	c #F0F0F0\",
+\"B 	c #7E7E7E\",
+\"C 	c #6F6F6F\",
+\"D 	c #A2A2A2\",
+\"E 	c #F6F6F6\",
+\"F 	c #EBEBEB\",
+\"G 	c #D0D0D0\",
+\"H 	c #BEBEBE\",
+\"I 	c #BFBFBF\",
+\"J 	c #A6A6A6\",
+\"K 	c #7D7D7D\",
+\"L 	c #787878\",
+\"M 	c #6D6D6D\",
+\"N 	c #D2D2D2\",
+\"O 	c #8C8C8C\",
+\"P 	c #868686\",
+\"Q 	c #878787\",
+\"R 	c #848484\",
+\"S 	c #C2C2C2\",
+\"T 	c #7F7F7F\",
+\"U 	c #949494\",
+\"V 	c #8D8D8D\",
+\"W 	c #C0C0C0\",
+\"X 	c #EDEDED\",
+\"Y 	c #E0E0E0\",
+\"Z 	c #9C9C9C\",
+\"` 	c #939393\",
+\" .	c #8E8E8E\",
+\"..	c #767676\",
+\"+.	c #E9E9E9\",
+\"@.	c #E5E5E5\",
+\"#.	c #D6D6D6\",
+\"$.	c #9D9D9D\",
+\"%.	c #B8B8B8\",
+\"&.	c #D5D5D5\",
+\"*.	c #FFFFFF\",
+\"=.	c #929292\",
+\"-.	c #B1B1B1\",
+\"          . + @ . # $           \",
+\"      + % . & * = - ; > ,       \",
+\"    + . ' ) ! ~ { ] ^ / ( _     \",
+\"  @ @ @ : < [ } | 1 2 3 4 5 6   \",
+\"  @ , & 7 8 9 0 0 : a b c _ .   \",
+\"d d e f g h i j k k l m _ , @ + \",
+\"d , . _ n o p q r l s t u e d @ \",
+\", . 5 v w x y z A w g B u e , @ \",
+\"C D / E / F G h H I J K L e , d \",
+\"M I E 8 N O ' P Q * t & _ e e d \",
+\"@ R ( 3 S T P g U U V R u e e d \",
+\"  + t W X Y j { Z `  .s f ..,   \",
+\"  ..d + Z w +.X @.#.p $.T e ,   \",
+\"    e u s D %.0 &.< *.F P @     \",
+\"      _ ' =.k ! -.7 -  ...      \",
+\"          @ + + + . C           \"};
+")
 
 (defun tabbar-popup-menu ()
   "Keymap for pop-up menu.  Emacs only."
@@ -1062,27 +1193,39 @@ SELECTED-P tells if the item is seleceted."
   (when (and window-system tabbar-ruler-use-mode-icons (featurep 'mode-icons))
     (let ((mode-icon (with-current-buffer (tabbar-tab-value tab)
 		       (assoc mode-name mode-icons))))
-      (when mode-icon
-	(setq tabbar-line-mode-icon (propertize " " 'face face
-						'tabbar-tab tab
-						'local-map keymap
-						'help-echo 'tabbar-help-on-tab
-						'face face
-						'pointer 'hand
-						'tabbar-action 'icon))
-	 (propertize " "
-		   'display (create-image
-			     (mode-icons-get-icon-file
-			      (concat (nth 1 mode-icon) "." (symbol-name (nth 2 mode-icon))))
-			     (nth 2 mode-icon) nil
-			     :ascent 'center
-			     :face face)
-		   'face face
-		   'tabbar-tab tab
-		   'local-map keymap
-		   'help-echo 'tabbar-help-on-tab
-		   'pointer 'hand
-		   'tabbar-action 'icon)))))
+      (setq tabbar-line-mode-icon (propertize " " 'face face
+						  'tabbar-tab tab
+						  'local-map keymap
+						  'help-echo 'tabbar-help-on-tab
+						  'face face
+						  'pointer 'hand
+						  'tabbar-action 'icon))
+      (if mode-icon
+	  (propertize " "
+		      'display (create-image
+				(mode-icons-get-icon-file
+				 (concat (nth 1 mode-icon) "." (symbol-name (nth 2 mode-icon))))
+				(nth 2 mode-icon) nil
+				:ascent 'center
+				:face face)
+		      'face face
+		      'tabbar-tab tab
+		      'local-map keymap
+		      'help-echo 'tabbar-help-on-tab
+		      'pointer 'hand
+		      'tabbar-action 'icon)
+	(if tabbar-ruler-mode-icon-for-unknown-modes
+	    (propertize " "
+			'display (create-image mode-icon-unknown 'xpm t
+					       :ascent 'center
+					       :face face)
+			'face face
+			'tabbar-tab tab
+			'local-map keymap
+			'help-echo 'tabbar-help-on-tab
+			'pointer 'hand
+			'tabbar-action 'icon)
+	  (setq tabbar-line-mode-icon nil))))))
 
 (defun tabbar-line-padding (selected-p next-selected-p background-face)
   (when (and tabbar-ruler-fancy-tab-separator tabbar-ruler-tab-padding
