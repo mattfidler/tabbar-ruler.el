@@ -580,7 +580,7 @@ static char * c:\tmp\emacs_xpm[] = {
 (defun tabbar-popup-menu ()
   "Keymap for pop-up menu.  Emacs only."
   `(,(format "%s" (nth 0 tabbar-last-tab))
-    ["Clone" tabbar-popup-clone-indirect-buffer]
+    ["Buffer Indirect Clone" tabbar-popup-clone-indirect-buffer]
     "--"
     ["Close" tabbar-popup-close]
     ["Close all BUT this" tabbar-popup-close-but]
