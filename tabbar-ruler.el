@@ -352,7 +352,7 @@
   :type 'boolean
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-mode-icon-for-unknown-modes t
+(defcustom tabbar-ruler-mode-icon-for-unknown-modes nil
   "Use mode icons for unknown modes."
   :type 'boolean
   :group 'tabbar-ruler)
@@ -805,17 +805,16 @@ This copies the :family and :foundry from the `variable-pitch' face."
       (set-face-attribute face frame
 			  :background (tabbar-background 'tabbar-default)
 			  :foreground (tabbar-foreground 'tabbar-default)))
-  ;; (dolist (face '(tabbar-button
-  ;; 		  tabbar-separator
-  ;; 		  tabbar-selected
-  ;; 		  tabbar-selected-highlight
-  ;; 		  tabbar-selected-modified
-  ;; 		  tabbar-unselected
-  ;; 		  tabbar-unselected-highlight
-  ;; 		  tabbar-unselected-modified))
-  ;;   (set-face-attribute face frame
-  ;; 			:height (expt 1.2 -1)))
-  )
+  (dolist (face '(tabbar-button
+  		  tabbar-separator
+  		  tabbar-selected
+  		  tabbar-selected-highlight
+  		  tabbar-selected-modified
+  		  tabbar-unselected
+  		  tabbar-unselected-highlight
+  		  tabbar-unselected-modified))
+    (set-face-attribute face frame
+  			:height 100)))
 
 (defun tabbar-ruler-style-firefox-circle (&optional frame)
   "Setup firefox with closed image for FRAME."
@@ -1087,7 +1086,7 @@ Optional argument TYPE is a mouse click event type (see the function
 `tabbar-make-mouse-event' for details)."
   (let* ((mouse-event (tabbar-make-mouse-event type))
          (mouse-button (event-basic-type mouse-event))
-	 tmp)
+	 tmp map)
     (cond
 	 ((eq mouse-button 'mouse-3)
 	  (setq tabbar-last-tab tab)
@@ -1097,7 +1096,13 @@ Optional argument TYPE is a mouse click event type (see the function
 	  (funcall tabbar-close-tab-function tab)))
        ((and (eq action 'icon) (setq tmp (key-binding [menu-bar languages])))
 	(with-current-buffer (tabbar-tab-value tab)
-	  (popup-menu tmp))
+	  (setq map (copy-keymap tmp)
+		tmp (mouse-menu-major-mode-map))
+	  (define-key map [major-mode-sep-b] '(menu-item  "---"))
+	  (define-key map [major-mode] (cons (nth 1 tmp) tmp))
+	  ;; (setq tmp (make-composed-map tmp (mouse-menu-major-mode-map)))
+	  ;; (popup-menug tmp)
+	  (popup-menu map))
 	(tabbar-ruler-modification-state-change)
 	(tabbar-display-update))
        (t (when tabbar-select-tab-function
