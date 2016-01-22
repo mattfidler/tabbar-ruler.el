@@ -636,7 +636,7 @@ static char * c:\tmp\emacs_xpm[] = {
 (defun tabbar-popup-clone-indirect-buffer ()
   "Tab-bar pop up clone indirect-buffer"
   (interactive)
-  (let ((buffer (tabbar-tab-value tab)))
+  (let ((buffer (tabbar-tab-value tabbar-last-tab)))
     (with-current-buffer buffer
       (call-interactively 'clone-indirect-buffer))))
 
