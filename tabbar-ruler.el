@@ -580,7 +580,7 @@ static char * c:\tmp\emacs_xpm[] = {
 (defun tabbar-popup-menu ()
   "Keymap for pop-up menu.  Emacs only."
   `(,(format "%s" (nth 0 tabbar-last-tab))
-    ["Buffer Clone" tabbar-popup-clone-indirect-buffer]
+    ["Buffer Indirect Clone" tabbar-popup-clone-indirect-buffer]
     "--"
     ["Close" tabbar-popup-close]
     ["Close all BUT this" tabbar-popup-close-but]
@@ -618,6 +618,11 @@ static char * c:\tmp\emacs_xpm[] = {
                   (buffer-file-name (tabbar-tab-value tabbar-last-tab))
                   (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab)))
                   (not (string-match "\\.bz2\\(?:~\\|\\.~[0-9]+~\\)?\\'" (buffer-file-name (tabbar-tab-value tabbar-last-tab)))))]
+    ["Xzip File" tabbar-popup-xz
+     :active (and (executable-find "xz")
+                  (buffer-file-name (tabbar-tab-value tabbar-last-tab))
+                  (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab)))
+                  (not (string-match "\\.xz\\(?:~\\|\\.~[0-9]+~\\)?\\'" (buffer-file-name (tabbar-tab-value tabbar-last-tab)))))]
     ["Decompress File" tabbar-popup-decompress
      :active (and
               (buffer-file-name (tabbar-tab-value tabbar-last-tab))
@@ -737,6 +742,11 @@ static char * c:\tmp\emacs_xpm[] = {
   "Bzip file"
   (interactive)
   (tabbar-popup-gz ".bz2" "Could not bzip the file!"))
+
+(defun tabbar-popup-xz ()
+  "Bzip file"
+  (interactive)
+  (tabbar-popup-gz ".xz" "Could not xzip the file!"))
 
 (defun tabbar-popup-decompress ()
   "Decompress file"
