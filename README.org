@@ -7,7 +7,7 @@
 A modernised tabbar with ruler.
 
 #+ATTR_HTML: title="screenshot"
-[[https://www.google.com][file:https://raw.githubusercontent.com/rhoit/tabbar-ruler/dump/screenshots/01.png]]
+[[https://www.google.com][file:https://raw.githubusercontent.com/rhoit/tabbar-ruler.el/dump/screenshots/01.png]]
 
 [[file:tabbar-ruler.el][tabbar-ruler.el]] is an emacs package that allows both the tabbar and
 the ruler to be used together. In addition it allows auto-hiding of
