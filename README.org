@@ -1,128 +1,74 @@
 #+TITLE: Tabbar Ruler
 #+AUTHOR: Matthew L. Fidler
-* Library Information
- /tabbar-ruler.el/ --- Pretty tabbar, autohide, use both tabbar/ruler
+#+DATE: Monday, Oct 18 2010
+#+OPTIONS: num:t
+#+STARTUP: content
 
- - Filename :: [[file:tabbar-ruler.el][tabbar-ruler.el]]
- - Description :: Changes tabbar setup to be similar to Aquaemacs.
- - Author :: Matthew Fidler, Ta Quang Trung, Nathaniel Cunningham
- - Maintainer :: Matthew L. Fidler
- - Created :: Mon Oct 18 17:06:07 2010 (-0500)
- - Version :: 0.41
- - Last-Updated :: Sat Dec 15 15:44:34 2012 (+0800)
- -           By :: Matthew L. Fidler
- -     Update # :: 663
- - URL :: http://github.com/mlf176f2/tabbar-ruler.el
- - Keywords :: Tabbar, Ruler Mode, Menu, Tool Bar.
- - Compatibility :: Windows Emacs 23.x
- - Package-Requires :: ((tabbar "2.0.1"))
+A modernised tabbar with ruler.
 
-* Introduction
-Tabbar ruler is an emacs package that allows both the tabbar and the
-ruler to be used together.  In addition it allows auto-hiding of the
-menu-bar and tool-bar.
+#+ATTR_HTML: title="screenshot"
+[[https://www.google.com][file:https://raw.githubusercontent.com/rhoit/tabbar-ruler.el/dump/screenshots/01.png]]
 
+[[file:tabbar-ruler.el][tabbar-ruler.el]] is an emacs package that allows both the tabbar and
+the ruler to be used together. In addition it allows auto-hiding of
+the menu-bar and tool-bar.
 
-Tabbar appearance based on reverse engineering Aquaemacs code and
-changing to my preferences, and Emacs Wiki.
+Appearance originally created on reverse engineering /Aquaemacs/, now
+improved too looks and feel of modern GUI.
 
-Tabbar/Ruler integration is new. Tabbar should be active on mouse
-move.  Ruler should be active on self-insert commands.
+* Getting it
+** Requirements
 
-Also allows auto-hiding of toolbar and menu.
+   | package    | version  |
+   |------------+----------|
+   | emacs      | >= 23    |
+   | [[https://github.com/dholm][tabbar]]     | >= 2.0.1 |
+   | [[https://github.com/milkypostman/powerline][powerline]]  | >= 2.3   |
+   | [[https://github.com/ryuslash/mode-icons][mode-icons]] | >= 0.10  |
 
-To use this, put the library in your load path and use
+   /tabbar-ruler/ package can be found are *el-get* and *MELPA*.
 
-#+BEGIN_SRC emacs-lisp
-  (setq tabbar-ruler-global-tabbar t) ; If you want tabbar
-  (setq tabbar-ruler-global-ruler t) ; if you want a global ruler
-  (setq tabbar-ruler-popup-menu t) ; If you want a popup menu.
-  (setq tabbar-ruler-popup-toolbar t) ; If you want a popup toolbar
-  (setq tabbar-ruler-popup-scrollbar t) ; If you want to only show the
-                                        ; scroll bar when your mouse is moving.
-  (require 'tabbar-ruler)
-  
-#+END_SRC
+** Manual
+   To use  library in your load path and use
 
+   #+BEGIN_SRC emacs-lisp
+     (setq tabbar-ruler-global-tabbar t)    ; get tabbar
+     (setq tabbar-ruler-global-ruler t)     ; get global ruler
+     (setq tabbar-ruler-popup-menu t)       ; get popup menu.
+     (setq tabbar-ruler-popup-toolbar t)    ; get popup toolbar
+     (setq tabbar-ruler-popup-scrollbar t)  ; show scroll-bar on mouse-move
+     (require 'tabbar-ruler)
+   #+END_SRC
 
-* Changing how tabbar groups files/buffers
-The default behavior for tabbar-ruler is to group the tabs by frame.
-You can change this back to the old-behavior by:
-#+BEGIN_SRC emacs-lisp
-  (tabbar-ruler-group-buffer-groups)
-#+END_SRC
-or by issuing the following code:
+* Configuration
+** Buffer Groups
+   The default behavior for tabbar-ruler is to group the tabs by frame.
+   You can change this back to the old-behavior by:
 
-#+BEGIN_SRC emacs-lisp
-  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (tabbar-ruler-group-buffer-groups)
+   #+END_SRC
 
-In addition, you can also group by projectile project easily by:
+   or by issuing the following code:
 
-#+BEGIN_SRC emacs-lisp
-  (tabbar-ruler-group-by-projectile-project)
-#+END_SRC
-* Adding key-bindings to tabbar-ruler
-You can add key-bindings to change the current tab.  The easiest way
-to add the bindings is to add a key like:
+   #+BEGIN_SRC emacs-lisp
+     (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+   #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c t") 'tabbar-ruler-move)
-#+END_SRC
+   In addition, you can also group by projectile project easily by:
 
-After that, all you would need to press is Control+c t and then the
-arrow keys will allow you to change the buffer quite easily.  To exit
-the buffer movement you can press enter or space.
+   #+BEGIN_SRC emacs-lisp
+     (tabbar-ruler-group-by-projectile-project)
+   #+END_SRC
 
-* Known issues
-the left arrow is text instead of an image.
-* Functions
-** Interactive Functions
+** Key Bindings
+   You can add key-bindings to change the current tab.  The easiest way
+   to add the bindings is to add a key like:
 
-** Internal Functions
-* Variables
-** Customizable Variables
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c t") 'tabbar-ruler-move)
+   #+END_SRC
 
-** Internal Variables
-* History
-
- - 13-Sep-2014 ::  Version bump 1-Jul-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Fix variable misspecification (Matthew L. Fidler)
- - 28-Jun-2013 ::  Fixed strange org-readme issue (Matthew L. Fidler)
- - 28-Jun-2013 ::  Added popup scrollbarbar  (Matthew L. Fidler)
- - 27-Jun-2013 ::  Added autoload for tabbar-install-faces. That way ergoemacs and other packages can load the tabbar-ruler by just calling (tabbar-install-faces) 6-Jun-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Added left-char and right char to tabbar-ruler-move-keymap so that keybindings in emacs 24.3 work correctly. 6-Jun-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Changed movement commands. The movement commands are simpler (in my opinion) 4-Jun-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Change package description. Fixed the documentation to actually change to the old tabbar method of grouping buffers. 4-Jun-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Turn off ruler mode in the next buffer (if necessary) 4-Jun-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Add movement keys. Also add toggles for different groupings. 1-May-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Try to address issue #4 1-May-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Changed the modified font to italics. Made the modified symbol customizable, but off by default. Should address issue #5. 5-Apr-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Trying to update upstream sources. 5-Apr-2013 Matthew L. Fidler Last-Updated: Sat Dec 15 15:44:34 2012 (+0800) #663 (Matthew L. Fidler) Fixed speed issues on windows. It wasn't a redraw that was causing the speed issues, it was the constant recreation of the right-click menus...  (Matthew L. Fidler)
- - 27-Mar-2013 ::  Fixed typo to fix issue #2. (Matthew L. Fidler)
- - 27-Mar-2013 ::  Attempt to fix issue #2. Whenever the color is not a string, assume that it should be transparent. I'm unsure if the mac osx puts the translated color to a string. However, it seems that the undefined should be the same as transparent. Therefore, this fix *should* work... (Matthew L. Fidler)
- - 20-Mar-2013 ::  Add inverse video option for unselected tabbar. Made it the default. has better contrast between the selected and unselected tabs. (Matthew L. Fidler)
- - 20-Mar-2013 ::  Changed emacs 24.3 to support the times character. Also removed starred documentation strings. (Matthew L. Fidler)
- - 20-Mar-2013 ::  Emacs 24.3 had an error when using ucs-insert. Added fallbacks so that this works when ucs-insert does not work. (Matthew L. Fidler)
- - 20-Feb-2013 ::  Changed so that the separators do not need to be fancy images. I found that when the separators were images, it slowed down emacs on windows. Therefore, the fancy images are disabled by default. This also includes the stylized close symbols. (Matthew L. Fidler)
- - 19-Dec-2012 ::  Added back popup-menu (Matthew L. Fidler)
- - 19-Dec-2012 ::  Upload to marmalade (Matthew L. Fidler)
- - 19-Dec-2012 ::  Changed slope. Made the background color the default background color if unspecified. Made tabbar-hex-color return "None" if not defined (Matthew L. Fidler)
- - 15-Dec-2012 ::  Made sure that the tabbr-ruler-separator-image is at least 17 pixels high (Matthew L. Fidler)
- - 15-Dec-2012 ::  Attempt to fix another bug on load (Matthew L. Fidler)
- - 14-Dec-2012 ::  Fixed tabbar ruler so that it loads cold. (Matthew L. Fidler)
- - 14-Dec-2012 ::  Memoized the tabbar images to speed things up (Matthew L. Fidler)
- - 14-Dec-2012 ::  Upload to Marmalade  (Mat==thew L. Fidler)
- - 14-Dec-2012 ::  Fancy tabs (Matthew L. Fidler)
- - 13-Dec-2012 ::  Added Bug fix for coloring. Made the selected tab match the default color in the buffer. Everything else is grayed out. (Matthew L. Fidler)
- - 10-Dec-2012 ::  Took out a statement that may fix the left-scrolling bug? (Matthew L. Fidler)
- - 10-Dec-2012 ::  Added package-menu-mode to the excluded tabbar-ruler fight modes. (Matthew L. Fidler)
- - 07-Dec-2012 ::  Will no longer take over editing of org source blocks or info blocks. (Matthew L. Fidler)
- - 07-Dec-2012 ::  Changed the order of checking so that helm will work when you move a mouse. (Matthew L. Fidler)
- - 07-Dec-2012 ::  Now works with Helm. Should fix issue #1 (Matthew L. Fidler)
- - 06-Dec-2012 ::  Now colors are based on loaded theme (from minibar). Also added bug-fix for setting tabbar colors every time a frame opens. Also added a bug fix for right-clicking a frame that is not associated with a buffer. 1-Mar-2012 Matthew L. Fidler Last-Updated: Thu Mar 1 08:38:09 2012 (-0600) #656 (Matthew L. Fidler) Will not change tool-bar-mode in Mac. It causes some funny things to happen. 9-Feb-2012 Matthew L. Fidler Last-Updated: Thu Feb 9 19:18:21 2012 (-0600) #651 (Matthew L. Fidler) Will not change the menu bar in a Mac. Its always there. (Matthew L. Fidler)
- - 14-Jan-2012 ::  Added more commands that trigger the ruler. (Matthew L. Fidler)
- - 14-Jan-2012 ::  Added more ruler commands. It works a bit better now. Additionally I have changed the ep- to tabbar-ruler-. (Matthew L. Fidler)
- - 14-Jan-2012 ::  Changed EmacsPortable to tabbar-ruler (Matthew L. Fidler)
- - 08-Feb-2011 ::  Added ELPA tags.  (Matthew L. Fidler)
- - 08-Feb-2011 ::  Removed xpm dependencies. Now no images are required, they are built by the library. (Matthew L. Fidler)
- - 04-Dec-2010 ::  Added context menu. (Matthew L. Fidler)
- - 01-Dec-2010 ::  Added scratch buffers to list. (Matthew L. Fidler)
- - 04-Nov-2010 ::  Made tabbar mode default. (us041375)
- - 02-Nov-2010 ::  Make post-command-hook handle errors gracefully. (Matthew L. Fidler)
- - 20-Oct-2010 ::  Changed behavior when outside the window to assume the last known mouse position. This fixes the two problems below.  (us041375)
- - 20-Oct-2010 ::  As it turns out when the toolbar is hidden when the mouse is outside of the emacs window, it also hides when navigating the menu. Switching behavior back.  (us041375)
- - 20-Oct-2010 ::  Made popup menu and toolbar be hidden when mouse is oustide of emacs window. (us041375)
- - 20-Oct-2010 ::  Changed to popup ruler-mode if tabbar and ruler are not displayed. (us041375)
- - 19-Oct-2010 ::  Changed tabbar, menu, toolbar and ruler variables to be buffer or frame local.  (Matthew L. Fidler)
+   After that, all you would need to press is Control+c t and then the
+   arrow keys will allow you to change the buffer quite easily. To exit
+   the buffer movement you can press enter or space.
