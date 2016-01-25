@@ -19,8 +19,12 @@ improved too looks and feel of modern GUI.
 * Getting it
 ** Requirements
 
-   | Compatibility | emacs >= 23     |
-   | dependencise  | tabbar >= 2.0.1 |
+   | package    | version  |
+   |------------+----------|
+   | emacs      | >= 23    |
+   | [[https://github.com/dholm][tabbar]]     | >= 2.0.1 |
+   | [[https://github.com/milkypostman/powerline][powerline]]  | >= 2.3   |
+   | [[https://github.com/ryuslash/mode-icons][mode-icons]] | >= 0.10  |
 
    /tabbar-ruler/ package can be found are *el-get* and *MELPA*.
 
