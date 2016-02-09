@@ -347,9 +347,12 @@
   :type '(repeat (symbol :tag "Major Mode"))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-use-mode-icons t
+(defcustom tabbar-ruler-use-mode-icons 'enabled
   "Use Mode icons for tabbar-ruler"
-  :type 'boolean
+  :type '(choice
+	  (const :tag "No" nil)
+	  (const :tag "If enabled" enabled)
+	  (const :tag "Always" t))
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-mode-icon-for-unknown-modes nil
@@ -1248,12 +1251,45 @@ SELECTED-P tells if the item is seleceted."
       tabbar-separator-value))
 
 (defvar tabbar-line-mode-icon nil)
+
+(defun tabbar-line-fix-display (text face tab keymap)
+  "Fix display for TEXT given FACE, TAB and KEYMAP."
+  (let* ((display-p (get-text-property 0 'display text))
+	 (image-p (and display-p (eq (consp display-p) 'image)))
+	 (plist (and image-p (cdr display-p))))
+    (cond
+     (image-p
+      (setq plist (plist-put plist :ascent 'center)
+	    plist (plist-put plist :face face))
+      (propertize text
+		  'display `(image ,@plist)
+		  'face face
+		  'tabbar-tab tab
+		  'local-map keymap
+		  'help-echo 'tabbar-help-on-tab
+		  'pointer 'hand
+		  'tabbar-action 'icon))
+     (display-p
+      (propertize text
+		  'face face
+		  'tabbar-tab tab
+		  'local-map keymap
+		  'help-echo 'tabbar-help-on-tab
+		  'pointer 'hand
+		  'tabbar-action 'icon
+		  'display display-p))
+     (t text))))
 (defun tabbar-line-mode-icon (tab face keymap)
   "Create mode icon for TAB using FACE and KEYMAP"
   (setq tabbar-line-mode-icon nil)
-  (when (and window-system tabbar-ruler-use-mode-icons (featurep 'mode-icons))
-    (let ((mode-icon (with-current-buffer (tabbar-tab-value tab)
-		       (assoc mode-name mode-icons))))
+  (when (and window-system 
+	     (or (and (eq t tabbar-ruler-use-mode-icons) (featurep 'mode-icons))
+		 (and (eq 'enabled tabbar-ruler-use-mode-icons)
+		      (boundp 'mode-icons-mode)
+		      mode-icons-mode)))
+    (let ((mode-icon (and (fboundp #'mode-icons-get-icon-spec)
+			  (with-current-buffer (tabbar-tab-value tab)
+			    (mode-icons-get-icon-spec mode-name)))))
       (setq tabbar-line-mode-icon (propertize " " 'face face
 						  'tabbar-tab tab
 						  'local-map keymap
@@ -1262,19 +1298,7 @@ SELECTED-P tells if the item is seleceted."
 						  'pointer 'hand
 						  'tabbar-action 'icon))
       (if mode-icon
-	  (propertize " "
-		      'display (create-image
-				(mode-icons-get-icon-file
-				 (concat (nth 1 mode-icon) "." (symbol-name (nth 2 mode-icon))))
-				(nth 2 mode-icon) nil
-				:ascent 'center
-				:face face)
-		      'face face
-		      'tabbar-tab tab
-		      'local-map keymap
-		      'help-echo 'tabbar-help-on-tab
-		      'pointer 'hand
-		      'tabbar-action 'icon)
+	  (tabbar-line-fix-display (with-current-buffer (tabbar-tab-value tab) mode-name) face tab keymap)
 	(if tabbar-ruler-mode-icon-for-unknown-modes
 	    (propertize " "
 			'display (create-image mode-icon-unknown 'xpm t
@@ -1955,13 +1979,13 @@ remove the keymap depends on user input and KEEP-PRED:
 
 (add-hook 'desktop-after-read-hook 'tabbar-ruler-remove-caches)
 
-(defadvice enable-theme (after tabbar-ruler-enable-theme-after activate)
-  "Fix the tabbar faces when you change themes."
-  (tabbar-install-faces))
+;; (defadvice enable-theme (after tabbar-ruler-enable-theme-after activate)
+;;   "Fix the tabbar faces when you change themes."
+;;   (tabbar-install-faces))
 
-(defadvice disable-theme (after tabbar-ruler-disable-theme-after activate)
-  "Fix the tabbar faces when you change themes."
-  (tabbar-install-faces))
+;; (defadvice disable-theme (after tabbar-ruler-disable-theme-after activate)
+;;   "Fix the tabbar faces when you change themes."
+;;   (tabbar-install-faces))
 
 
 (defmacro tabbar-ruler-save-buffer-state (&rest body)
