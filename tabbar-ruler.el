@@ -1254,14 +1254,15 @@ SELECTED-P tells if the item is seleceted."
 
 (defun tabbar-line-fix-display (text face tab keymap)
   "Fix display for TEXT given FACE, TAB and KEYMAP."
-  (let* ((display-p (get-text-property 0 'display text))
-	 (image-p (and display-p (eq (consp display-p) 'image)))
+  (let* ((compose-p (get-text-property 0 'composition text))
+	 (display-p (get-text-property 0 'display text))
+	 (image-p (and display-p (eq (car display-p) 'image)))
 	 (plist (and image-p (cdr display-p))))
     (cond
      (image-p
       (setq plist (plist-put plist :ascent 'center)
 	    plist (plist-put plist :face face))
-      (propertize text
+      (propertize " "
 		  'display `(image ,@plist)
 		  'face face
 		  'tabbar-tab tab
@@ -1269,16 +1270,27 @@ SELECTED-P tells if the item is seleceted."
 		  'help-echo 'tabbar-help-on-tab
 		  'pointer 'hand
 		  'tabbar-action 'icon))
-     (display-p
-      (propertize text
+     ((and display-p (stringp display-p)
+	   (= 1 (length display-p)))
+      (propertize display-p
 		  'face face
 		  'tabbar-tab tab
 		  'local-map keymap
 		  'help-echo 'tabbar-help-on-tab
 		  'pointer 'hand
-		  'tabbar-action 'icon
-		  'display display-p))
-     (t text))))
+		  'tabbar-action 'icon))
+     ((and compose-p (= 3 (length compose-p))
+	   (setq compose-p (nth 2 compose-p))
+	   (= 1 (length compose-p))
+	   (setq compose-p (make-string 1 (aref compose-p 0))))
+      (propertize compose-p
+		  'face face
+		  'tabbar-tab tab
+		  'local-map keymap
+		  'help-echo 'tabbar-help-on-tab
+		  'pointer 'hand
+		  'tabbar-action 'icon))
+     (t ""))))
 (defun tabbar-line-mode-icon (tab face keymap)
   "Create mode icon for TAB using FACE and KEYMAP"
   (setq tabbar-line-mode-icon nil)
