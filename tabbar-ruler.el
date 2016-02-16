@@ -347,13 +347,19 @@
   :type '(repeat (symbol :tag "Major Mode"))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-use-mode-icons 'enabled
+(defcustom tabbar-ruler-use-mode-icons 't
   "Use Mode icons for tabbar-ruler"
   :type '(choice
 	  (const :tag "No" nil)
-	  (const :tag "If enabled" enabled)
+	  (const :tag "If enabled" if-enabled)
 	  (const :tag "Always" t))
   :group 'tabbar-ruler)
+
+(when tabbar-ruler-use-mode-icons
+  (require 'mode-icons nil t)
+  (if (fboundp #'mode-icons-mode)
+      (mode-icons-mode)
+    (warn "Cannot start mode-icons-mode, icons will be missing from tabs.")))
 
 (defcustom tabbar-ruler-mode-icon-for-unknown-modes nil
   "Use mode icons for unknown modes."
@@ -1296,7 +1302,7 @@ SELECTED-P tells if the item is seleceted."
   (setq tabbar-line-mode-icon nil)
   (when (and window-system 
 	     (or (and (eq t tabbar-ruler-use-mode-icons) (featurep 'mode-icons))
-		 (and (eq 'enabled tabbar-ruler-use-mode-icons)
+		 (and (eq 'if-enabled tabbar-ruler-use-mode-icons)
 		      (boundp 'mode-icons-mode)
 		      mode-icons-mode)))
     (let ((mode-icon (and (fboundp #'mode-icons-get-icon-spec)
