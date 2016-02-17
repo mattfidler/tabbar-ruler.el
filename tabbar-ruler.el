@@ -1823,10 +1823,50 @@ visiting a file.  The current buffer is always included."
    (interactive)
    (setq tabbar-buffer-groups-function 'tabbar-ruler-group-user-buffers-helper))
 
+(defun tabbar-ruler-buffer-groups ()
+  "Return the list of group names the current buffer belongs to.
+Return a list of one element based on major mode."
+  (list
+   (cond
+    ((or (get-buffer-process (current-buffer))
+         ;; Check if the major mode derives from `comint-mode' or
+         ;; `compilation-mode'.
+         (tabbar-buffer-mode-derived-p
+          major-mode '(comint-mode compilation-mode)))
+     "Process")
+    ((member (buffer-name)
+             '("*scratch*" "*Messages*"))
+     "Common"
+     )
+    ((eq major-mode 'dired-mode)
+     "Dired"
+     )
+    ((memq major-mode
+           '(help-mode apropos-mode Info-mode Man-mode))
+     "Help")
+    ((memq major-mode
+           '(rmail-mode
+             rmail-edit-mode vm-summary-mode vm-mode mail-mode
+             mh-letter-mode mh-show-mode mh-folder-mode
+             gnus-summary-mode message-mode gnus-group-mode
+             gnus-article-mode score-mode gnus-browse-killed-mode))
+     "Mail")
+    (t
+     ;; Return `mode-name' if not blank, `major-mode' otherwise.
+     (if (and (stringp mode-name)
+              ;; Take care of preserving the match-data because this
+              ;; function is called when updating the header line.
+              (save-match-data (string-match "[^ ]" mode-name)))
+         (let ((txt (format "%s" mode-name)))
+	   ;; Take out mode-icons and show text
+	   (set-text-properties 0 (length txt) nil txt)
+	   txt)
+       (symbol-name major-mode))))))
+
 (defun tabbar-ruler-group-buffer-groups ()
   "Use tabbar's major-mode grouping of buffers."
   (interactive)
-  (setq tabbar-buffer-groups-function 'tabbar-buffer-groups))
+  (setq tabbar-buffer-groups-function 'tabbar-ruler-buffer-groups))
 
 ;; default group mode
 (tabbar-ruler-group-user-buffers)
