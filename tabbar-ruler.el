@@ -616,6 +616,7 @@ static char * c:\tmp\emacs_xpm[] = {
      :active (and (buffer-file-name (tabbar-tab-value tabbar-last-tab))
                   (file-exists-p (buffer-file-name (tabbar-tab-value tabbar-last-tab))))
      ]
+    ["Copy buffer name" tabbar-popup-buffer-name]
     "--"
     ["Gzip File" tabbar-popup-gz
      :active (and (executable-find "gzip")
@@ -706,6 +707,14 @@ static char * c:\tmp\emacs_xpm[] = {
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
+    (kill-new fn)))
+
+
+(defun tabbar-popup-buffer-name ()
+  "Tab-bar copy buffer name"
+  (interactive)
+  (let* ((buf (tabbar-tab-value tabbar-last-tab))
+         (fn (buffer-name buf)))
     (kill-new fn)))
 
 
