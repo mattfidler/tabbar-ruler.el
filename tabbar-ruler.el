@@ -12,14 +12,14 @@
 ;; URL: http://github.com/mlf176f2/tabbar-ruler.el
 ;; Keywords: Tabbar, Ruler Mode, Menu, Tool Bar.
 ;; Compatibility: Windows Emacs 23.x
-;; Package-Requires: ((tabbar "2.0.1") (powerline "2.3") (mode-icons "0.1.0"))
+;; Package-Requires: ((tabbar "2.0.1") (powerline "2.3") (mode-icons "0.4.0") (cl-lib "0.5"))
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
 ;;
 ;; * Introduction
-;; Tabbar ruler is an emacs package that allows both the tabbar and the
+;; Tabbar ruler is an Emacs package that allows both the tabbar and the
 ;; ruler to be used together.  In addition it allows auto-hiding of the
 ;; menu-bar and tool-bar.
 ;;
@@ -27,7 +27,7 @@
 ;; Tabbar appearance based on reverse engineering Aquaemacs code and
 ;; changing to my preferences, and Emacs Wiki.
 ;;
-;; Tabbar/Ruler integration is new. Tabbar should be active on mouse
+;; Tabbar/Ruler integration is new.  Tabbar should be active on mouse
 ;; move.  Ruler should be active on self-insert commands.
 ;;
 ;; Also allows auto-hiding of toolbar and menu.
@@ -292,7 +292,7 @@
 
 (add-to-list 'load-path (file-name-directory (or load-file-name (buffer-file-name))))
 
-(require 'cl)
+(require 'cl-lib)
 (require 'tabbar)
 (require 'easymenu)
 (require 'powerline)
@@ -302,7 +302,7 @@
   "Pretty tabbar, autohide, use both tabbar/ruler."
   :group 'tabbar)
 
-(defcustom tabbar-ruler-global-tabbar 't
+(defcustom tabbar-ruler-global-tabbar t
   "Should tabbar-ruler have a global tabbar?"
   :type 'boolean
   :group 'tabbar-ruler)
@@ -347,12 +347,20 @@
   :type '(repeat (symbol :tag "Major Mode"))
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-use-mode-icons 't
-  "Use Mode icons for tabbar-ruler"
+(defcustom tabbar-ruler-use-mode-icons t
+  "Use mode icons for tabbar-ruler."
   :type '(choice
 	  (const :tag "No" nil)
 	  (const :tag "If enabled" if-enabled)
 	  (const :tag "Always" t))
+  :group 'tabbar-ruler)
+
+(defcustom tabbar-ruler-recolor-inactive-icons t
+  "Recolor inactive icons for `mode-icons' icons."
+  :type '(choice
+          (const :tag "No" nil)
+          (const :tag "If enabled" if-enabled)
+          (const :tag "Always" t))
   :group 'tabbar-ruler)
 
 (when tabbar-ruler-use-mode-icons
@@ -440,22 +448,24 @@ This is only enabled whin `tabbar-ruler-fancy-tab-separator' is non-nil"
 
 
 (defcustom tabbar-ruler-fancy-close-image nil
-  "Use an image for the close"
+  "Use an image for the close."
   :type 'boolean
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-movement-timer-delay 0.1
-  "Timer Delay for `tabbar-ruler-movement-timer'"
+  "Timer delay for `tabbar-ruler-movement-timer'."
   :type 'number
   :group 'tabbar-ruler)
 
 (defvar tabbar-close-tab-function nil
-  "Function to call to close a tabbar tab.  Passed a single argument, the tab
-construct to be closed.")
+  "Function to call to close a tabbar tab.
+
+Passed a single argument, the tab construct to be closed.")
 
 (defvar tabbar-new-tab-function nil
-  "Function to call to create a new buffer in tabbar-mode.  Optional single
-argument is the MODE for the new buffer.")
+  "Function to call to create a new buffer in tabbar-mode.
+
+Optional single argument is the MODE for the new buffer.")
 
 (defvar tabbar-last-tab nil)
 (defvar tabbar-ruler-keep-tabbar nil)
@@ -644,23 +654,23 @@ static char * c:\tmp\emacs_xpm[] = {
     ))
 
 (defun tabbar-popup-print ()
-  "Print Buffer"
+  "Print buffer."
   (interactive))
 
 (defun tabbar-popup-clone-indirect-buffer ()
-  "Tab-bar pop up clone indirect-buffer"
+  "Tabbar pop up clone indirect-buffer."
   (interactive)
   (let ((buffer (tabbar-tab-value tabbar-last-tab)))
     (with-current-buffer buffer
       (call-interactively 'clone-indirect-buffer))))
 
 (defun tabbar-popup-close ()
-  "Tab-bar pop up close"
+  "Tabbar pop up close."
   (interactive)
   (funcall tabbar-close-tab-function tabbar-last-tab))
 
 (defun tabbar-popup-close-but ()
-  "Tab-bar close all BUT this buffer"
+  "Tabbar close all BUT this buffer."
   (interactive)
   (let ((cur (symbol-value (funcall tabbar-current-tabset-function))))
     (mapc (lambda(tab)
@@ -669,7 +679,7 @@ static char * c:\tmp\emacs_xpm[] = {
           cur)))
 
 (defun tabbar-popup-save-as ()
-  "Tab-bar save as"
+  "Tabbar save as."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab)))
     (save-excursion
@@ -677,7 +687,7 @@ static char * c:\tmp\emacs_xpm[] = {
       (call-interactively 'write-file))))
 
 (defun tabbar-popup-rename ()
-  "Tab-bar rename"
+  "Tabbar rename."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
@@ -689,7 +699,7 @@ static char * c:\tmp\emacs_xpm[] = {
           (delete-file fn))))))
 
 (defun tabbar-popup-delete ()
-  "Tab-bar delete file"
+  "Tabbar delete file."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
@@ -702,7 +712,7 @@ static char * c:\tmp\emacs_xpm[] = {
 
 
 (defun tabbar-popup-copy-path ()
-  "Tab-bar copy path"
+  "Tabbar copy path."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
@@ -710,7 +720,7 @@ static char * c:\tmp\emacs_xpm[] = {
 
 
 (defun tabbar-popup-copy-file ()
-  "Tab-bar copy file name"
+  "Tabbar copy file name."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
@@ -718,21 +728,30 @@ static char * c:\tmp\emacs_xpm[] = {
 
 
 (defun tabbar-popup-copy-dir ()
-  "Tab-bar copy directory"
+  "Tabbar copy directory."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
     (kill-new (file-name-directory fn))))
 
 (defun tabbar-popup-remove-compression-ext (file-name &optional new-compression)
-  "Removes compression extension, and possibly adds a new extension"
+  "Remove compression extension, and possibly add a new extension.
+
+FILE-NAME is the initial file-name.
+
+NEW-COMPRESSION is the new compression extension.  If nil, the compression extesion is removed."
   (let ((ret file-name))
     (when (string-match "\\(\\(?:\\.\\(?:Z\\|gz\\|bz2\\|tbz2?\\|tgz\\|svgz\\|sifz\\|xz\\|dz\\)\\)?\\)\\(\\(?:~\\|\\.~[0-9]+~\\)?\\)\\'" ret)
       (setq ret (replace-match (concat (or new-compression "") (match-string 2 ret)) t t ret)))
     (symbol-value 'ret)))
 
 (defun tabbar-popup-gz (&optional ext err)
-  "Gzips the file"
+  "Gzip the file.
+
+EXT is the extension to remove, which defaults to \".gz\".
+
+ERR is a custom error string.  Otherwise, the error is assumed to
+be \"Could not gzip the file!\"."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf))
@@ -748,17 +767,17 @@ static char * c:\tmp\emacs_xpm[] = {
             (delete-file fn)))))))
 
 (defun tabbar-popup-bz2 ()
-  "Bzip file"
+  "Bzip file."
   (interactive)
   (tabbar-popup-gz ".bz2" "Could not bzip the file!"))
 
 (defun tabbar-popup-xz ()
-  "Bzip file"
+  "Xzip file."
   (interactive)
   (tabbar-popup-gz ".xz" "Could not xzip the file!"))
 
 (defun tabbar-popup-decompress ()
-  "Decompress file"
+  "Decompress file."
   (interactive)
   (tabbar-popup-gz "" "Could not decompress the file!"))
 
@@ -769,7 +788,7 @@ static char * c:\tmp\emacs_xpm[] = {
 
 
 (defun tabbar-hex-color (color)
-  "Gets the hexadecimal value of a color"
+  "Gets the hexadecimal value of a COLOR."
   (let ((ret color))
     (cond
      ((not (eq (type-of color) 'string))
@@ -786,12 +805,12 @@ static char * c:\tmp\emacs_xpm[] = {
     (symbol-value 'ret)))
 
 (defcustom tabbar-ruler-swap-faces nil
-  "Swap the selected / unselected tab colors"
+  "Swap the selected / unselected tab colors."
   :type 'boolean
   :group 'tabbar-ruler)
 
 (defcustom tabbar-ruler-invert-deselected t
-  "Invert deselected tabs"
+  "Invert deselected tabs."
   :type 'boolean
   :group 'tabbar-ruler)
 
@@ -860,7 +879,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
 
 ;;;###autoload
 (defun tabbar-install-faces (&optional frame)
-  "Installs faces for a frame."
+  "Install faces for a FRAME."
   (interactive)
   (copy-face 'mode-line 'tabbar-default frame)
   (if tabbar-ruler-swap-faces
@@ -1297,6 +1316,7 @@ SELECTED-P tells if the item is seleceted."
 		  'pointer 'hand
 		  'tabbar-action 'icon))
      (t ""))))
+
 (defun tabbar-line-mode-icon (tab face keymap)
   "Create mode icon for TAB using FACE and KEYMAP"
   (setq tabbar-line-mode-icon nil)
@@ -1316,7 +1336,12 @@ SELECTED-P tells if the item is seleceted."
 						  'pointer 'hand
 						  'tabbar-action 'icon))
       (if mode-icon
-	  (tabbar-line-fix-display (with-current-buffer (tabbar-tab-value tab) mode-name) face tab keymap)
+	  (tabbar-line-fix-display
+	   (mode-icons--recolor-string (with-current-buffer (tabbar-tab-value tab) mode-name)
+  				       (or (not tabbar-ruler-recolor-inactive-icons)
+					   (memq face '(tabbar-selected tabbar-selected-highlight tabbar-selected-modified)))
+				       face)
+	   face tab keymap)
 	(if tabbar-ruler-mode-icon-for-unknown-modes
 	    (propertize " "
 			'display (create-image mode-icon-unknown 'xpm t
