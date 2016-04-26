@@ -682,8 +682,7 @@ static char * c:\tmp\emacs_xpm[] = {
   "Tabbar save as."
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab)))
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (call-interactively 'write-file))))
 
 (defun tabbar-popup-rename ()
@@ -691,8 +690,7 @@ static char * c:\tmp\emacs_xpm[] = {
   (interactive)
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (when (call-interactively 'write-file)
         (if (string= fn (buffer-file-name (current-buffer)))
             (error "Buffer has same name.  Just saved instead.")
@@ -704,8 +702,7 @@ static char * c:\tmp\emacs_xpm[] = {
   (let* ((buf (tabbar-tab-value tabbar-last-tab))
          (fn (buffer-file-name buf)))
     (when (yes-or-no-p (format "Are you sure you want to delete %s?" buf))
-      (save-excursion
-        (set-buffer buf)
+      (with-current-buffer buf
         (set-buffer-modified-p nil)
         (kill-buffer (current-buffer))
         (delete-file fn)))))
@@ -758,8 +755,7 @@ be \"Could not gzip the file!\"."
          (nfn (tabbar-popup-remove-compression-ext fn (or ext ".gz"))))
     (if (string= fn nfn)
         (error "Already has that compression!")
-      (save-excursion
-        (set-buffer buf)
+      (with-current-buffer buf
         (write-file nfn)
         (if (not (file-exists-p nfn))
             (error "%s" (or err "Could not gzip file!"))
@@ -966,9 +962,9 @@ the original function.  Use frame-local memoization."
 (defun tabbar-memoize-wrap-frame-local (func)
   "Return the tabbar-memoized version of FUNC.  The memoization cache is
 frame-local."
-  (let ((cache-sym (gensym))
-        (val-sym (gensym))
-        (args-sym (gensym)))
+  (let ((cache-sym (cl-gensym))
+        (val-sym (cl-gensym))
+        (args-sym (cl-gensym)))
     `(lambda (&rest ,args-sym)
        ,(concat (documentation func) "\n(tabbar-memoized function)")
        (let* ((,cache-sym (tabbar-create-or-get-tabbar-cache))
@@ -1418,12 +1414,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
       'pointer 'hand)
      (propertize (if (and modified-p tabbar-ruler-modified-symbol)
                      (with-temp-buffer
-                       (condition-case err
-                           (ucs-insert "207A")
-                         (error
-                          (condition-case err
-                              (insert-char #x207A)
-                            (error (insert "*")))))
+ 		       (insert (make-string 1 #x207A))
                        (insert " ")
                        (buffer-substring (point-min) (point-max))) " ")
                  'face face
@@ -1434,12 +1425,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                  'pointer 'hand)
      (if tabbar-ruler-fancy-close-image
          (propertize (with-temp-buffer
-                       (condition-case err
-                           (ucs-insert "00D7")
-                         (error
-                          (condition-case err
-                              (insert-char #x00D7)
-                            (error (insert "x")))))
+ 		       (insert (make-string 1 #x00D7)) 
                        (buffer-string))
                      'display close-button-image
                      'face face
@@ -1449,11 +1435,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
                      'tabbar-action 'close-tab)
        (propertize
         (with-temp-buffer
-          (condition-case err
-              (ucs-insert "00D7")
-            (error (condition-case err
-                       (insert-char #x00D7)
-                     (error (insert "x")))))
+ 	  (insert (make-string 1 #x00D7)) 
           (insert " ")
           (buffer-string))
         'face face
