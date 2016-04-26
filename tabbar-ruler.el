@@ -955,7 +955,7 @@ yet."
   "Memoize FUNC.
 If argument is a symbol then install the tabbar-memoized function over
 the original function.  Use frame-local memoization."
-  (typecase func
+  (cl-typecase func
     (symbol (fset func (tabbar-memoize-wrap-frame-local (symbol-function func))) func)
     (function (tabbar-memoize-wrap-frame-local func))))
 
@@ -973,7 +973,7 @@ frame-local."
              ,val-sym
            (puthash ,args-sym (apply ,func ,args-sym) ,cache-sym))))))
 
-(defun* tabbar-ruler-image (&key type disabled color face)
+(cl-defun tabbar-ruler-image (&key type disabled color face)
   "Returns the scroll-images"
   (let ((clr2 (or (and face (facep face) (tabbar-background face))
 		  (and disabled (tabbar-hex-color (face-attribute 'mode-line-inactive :background)))
