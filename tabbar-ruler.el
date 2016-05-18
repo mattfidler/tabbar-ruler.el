@@ -1098,19 +1098,20 @@ clr
 If optional MARGIN is non-nil, it must be a number of pixels to add as
 an extra margin around the image.  If optional MASK is non-nil, mask
 property is included."
-  (let ((plist (cdr image))
-	(face (or face 'tabbar-default)))
-    (or (plist-get plist :ascent)
-        (setq plist (plist-put plist :ascent 'center)))
-    (or (plist-get plist :mask)
-        (when mask
-          (setq plist (plist-put plist :mask '(heuristic t)))))
-    (or (not (natnump margin))
-        ;; (plist-get plist :margin)
-        (plist-put plist :margin margin))
-    (and (facep face)
-	 (plist-put plist :face face))
-    (setcdr image plist))
+  (when image
+    (let ((plist (cdr image))
+	  (face (or face 'tabbar-default)))
+      (or (plist-get plist :ascent)
+	  (setq plist (plist-put plist :ascent 'center)))
+      (or (plist-get plist :mask)
+	  (when mask
+	    (setq plist (plist-put plist :mask '(heuristic t)))))
+      (or (not (natnump margin))
+	  ;; (plist-get plist :margin)
+	  (plist-put plist :margin margin))
+      (and (facep face)
+	   (plist-put plist :face face))
+      (setcdr image plist)))
   image)
 
 ;; for buffer tabs, use the usual command to close/kill a buffer
