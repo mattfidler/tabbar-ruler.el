@@ -602,6 +602,7 @@ static char * c:\tmp\emacs_xpm[] = {
     ["Buffer Indirect Clone" tabbar-popup-clone-indirect-buffer]
     "--"
     ["Close" tabbar-popup-close]
+    ["Close all buffers with same extension" tabbar-popup-close-ext]
     ["Close all BUT this" tabbar-popup-close-but]
     "--"
     ["Save" tabbar-popup-save]
@@ -677,6 +678,16 @@ static char * c:\tmp\emacs_xpm[] = {
     (mapc (lambda(tab)
             (unless (eq tab tabbar-last-tab)
               (funcall tabbar-close-tab-function tab)))
+          cur)))
+
+(defun tabbar-popup-close-ext ()
+  "Tabbar close everything with the tabbaset same extension as the current."
+  (interactive)
+  (let ((cur (symbol-value (funcall tabbar-current-tabset-function)))
+	(ext (concat (regexp-quote (file-name-extension (buffer-name (car tabbar-last-tab)) t)) "$")))
+    (mapc (lambda(tab)
+	    (when (string-match-p ext (buffer-name (car tab)))
+	      (funcall tabbar-close-tab-function tab)))
           cur)))
 
 (defun tabbar-popup-save-as ()
