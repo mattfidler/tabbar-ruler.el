@@ -865,7 +865,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
 		  tabbar-unselected
 		  tabbar-unselected-highlight
 		  tabbar-unselected-modified))
-    (unless (get face 'save-value)
+    (unless (face-differs-from-default-p face)
       (set-face-attribute face frame
                           :background (tabbar-background 'tabbar-default)
                           :foreground (tabbar-foreground 'tabbar-default))))
@@ -877,7 +877,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
   		  tabbar-unselected
   		  tabbar-unselected-highlight
   		  tabbar-unselected-modified))
-    (unless (get face 'save-value)
+    (unless (face-differs-from-default-p face)
       (set-face-attribute face frame
 			  :height 100))))
 
@@ -953,13 +953,13 @@ This copies the :family and :foundry from the `variable-pitch' face."
 		  tabbar-unselected
 		  tabbar-unselected-highlight
 		  tabbar-unselected-modified))
-    (unless (get face 'save-value)
+    (unless (face-differs-from-default-p face)
       (set-face-attribute face frame
 			  :box nil
 			  :height (face-attribute 'default :height frame)
 			  :width (face-attribute 'default :width frame)))
     (when tabbar-ruler-use-variable-pitch
-      (unless (get face 'save-value)
+      (unless (face-differs-from-default-p face)
 	(set-face-attribute face frame
 			    :family (face-attribute 'variable-pitch :family)
 			    :foundry (face-attribute 'variable-pitch :foundry)))))
