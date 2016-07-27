@@ -337,7 +337,7 @@
   :type 'integer
   :group 'tabbar-ruler)
 
-(defcustom tabbar-ruler-excluded-buffers '("*Messages*" "*Completions*" "*ESS*")
+(defcustom tabbar-ruler-excluded-buffers '("*Messages*" "*Completions*" "*ESS*" "*Packages*" "*log-edit-files*" "*helm-mini*" "*helm-mode-describe-variable*")
   "Excluded buffers in tabbar."
   :type '(repeat (string :tag "Buffer Name"))
   :group 'tabbar-ruler)
@@ -1825,6 +1825,8 @@ visiting a file.  The current buffer is always included."
                      ;;((char-equal ?* (aref (buffer-name b) 0)) nil)
                      ((buffer-live-p b) b)))
                 (buffer-list))))
+
+(setq tabbar-buffer-list-function #'tabbar-ruler-tabbar-buffer-list)
 
 (defvar tabbar-ruler-projectile-tabbar-buffer-group-calc nil
   "Buffer group for projectile.  Should be buffer local and speed up calculation of buffer groups.")
