@@ -905,44 +905,44 @@ This copies the :family and :foundry from the `variable-pitch' face."
         (copy-face 'default 'tabbar-selected frame)
         (copy-face 'shadow 'tabbar-unselected frame)
         (if tabbar-ruler-invert-deselected
-            (unless (get 'tabbar-selected 'save-value)
+            (unless (face-differs-from-default-p 'tabbar-selected)
               (copy-face 'tabbar-selected 'tabbar-unselected)
               (set-face-attribute 'tabbar-selected frame)
               (invert-face 'tabbar-selected))
-          (unless (get 'tabbar-selected frame 'save-value)
+          (unless (face-differs-from-default-p 'tabbar-selected)
 	    (set-face-attribute 'tabbar-selected frame
 				:inherit 'mode-line-buffer-id
 				:background (face-attribute 'mode-line-inactive :background))))
-        (unless (get 'tabbar-unselected-highlight 'save-value)
+        (unless (face-differs-from-default-p 'tabbar-unselected-highlight)
 	  (copy-face 'mode-line-buffer-id 'tabbar-unselected-highlight frame))
-        (unless (get 'tabbar-selected-highlight 'save-value)
+        (unless (face-differs-from-default-p 'tabbar-selected-highlight)
 	  (copy-face 'mode-line-inactive 'tabbar-selected-highlight frame)))
-    (unless (get 'tabbar-selected 'save-value)
+    (unless (face-differs-from-default-p 'tabbar-selected)
       (copy-face 'default 'tabbar-selected frame))
-    (unless (get 'tabbar-unselected 'save-value)
+    (unless (face-differs-from-default-p 'tabbar-unselected)
       (copy-face 'shadow 'tabbar-unselected frame))
 
     (if tabbar-ruler-invert-deselected
-	(unless (get 'tabbar-unselected 'save-value)
+	(unless (face-differs-from-default-p 'tabbar-unselected)
 	  (copy-face 'tabbar-selected 'tabbar-unselected)
 	  (set-face-attribute 'tabbar-unselected frame)
 	  (invert-face 'tabbar-unselected))
-      (unless (get 'tabbar-unselected 'save-value)
+      (unless (face-differs-from-default-p 'tabbar-unselected)
 	(set-face-attribute 'tabbar-unselected frame
 			    :inherit 'mode-line-buffer-id
 			    :background (face-attribute 'mode-line-inactive :background))))
 
 
-    (unless (get 'tabbar-selected-highlight 'save-value)
+    (unless (face-differs-from-default-p 'tabbar-selected-highlight)
       (copy-face 'mode-line-buffer-id 'tabbar-selected-highlight frame))
-    (unless (get 'tabbar-unselected-highlight 'save-value)
+    (unless (face-differs-from-default-p 'tabbar-unselected-highlight)
       (copy-face 'mode-line-inactive 'tabbar-unselected-highlight frame)))
 
-  (unless (get 'tabbar-separator 'save-value)
+  (unless (face-differs-from-default-p 'tabbar-separator)
     (set-face-attribute 'tabbar-separator frame
 			:inherit 'tabbar-default))
 
-  (unless (get 'tabbar-button 'save-value)
+  (unless (face-differs-from-default-p 'tabbar-button)
     (set-face-attribute 'tabbar-button frame
 			:inherit 'tabbar-default))
   (dolist (face '(tabbar-button
