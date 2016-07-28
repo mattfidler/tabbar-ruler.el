@@ -295,7 +295,7 @@
 (require 'cl-lib)
 (require 'tabbar)
 (require 'easymenu)
-(require 'powerline)
+(require 'powerline nil t)
 (require 'mode-icons nil t)
 
 (defgroup tabbar-ruler nil
