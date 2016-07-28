@@ -852,6 +852,10 @@ This copies the :family and :foundry from the `variable-pitch' face."
   :type 'boolean
   :group 'tabbar-ruler)
 
+(defun tabbar-diff-face-p (face)
+  "Is FACE customized?"
+  (and (facep face) (face-differs-from-default-p face)))
+
 (defun tabbar-ruler-style-firefox (&optional frame)
   "Setup firefox style for FRAME."
   (setq tabbar-ruler-tab-padding 1
@@ -865,7 +869,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
 		  tabbar-unselected
 		  tabbar-unselected-highlight
 		  tabbar-unselected-modified))
-    (unless (face-differs-from-default-p face)
+    (unless (tabbar-diff-face-p face)
       (set-face-attribute face frame
                           :background (tabbar-background 'tabbar-default)
                           :foreground (tabbar-foreground 'tabbar-default))))
@@ -877,7 +881,7 @@ This copies the :family and :foundry from the `variable-pitch' face."
   		  tabbar-unselected
   		  tabbar-unselected-highlight
   		  tabbar-unselected-modified))
-    (unless (face-differs-from-default-p face)
+    (unless (tabbar-diff-face-p face)
       (set-face-attribute face frame
 			  :height 100))))
 
@@ -905,44 +909,44 @@ This copies the :family and :foundry from the `variable-pitch' face."
         (copy-face 'default 'tabbar-selected frame)
         (copy-face 'shadow 'tabbar-unselected frame)
         (if tabbar-ruler-invert-deselected
-            (unless (face-differs-from-default-p 'tabbar-selected)
+            (unless (tabbar-diff-face-p 'tabbar-selected)
               (copy-face 'tabbar-selected 'tabbar-unselected)
               (set-face-attribute 'tabbar-selected frame)
               (invert-face 'tabbar-selected))
-          (unless (face-differs-from-default-p 'tabbar-selected)
+          (unless (tabbar-diff-face-p 'tabbar-selected)
 	    (set-face-attribute 'tabbar-selected frame
 				:inherit 'mode-line-buffer-id
 				:background (face-attribute 'mode-line-inactive :background))))
-        (unless (face-differs-from-default-p 'tabbar-unselected-highlight)
+        (unless (tabbar-diff-face-p 'tabbar-unselected-highlight)
 	  (copy-face 'mode-line-buffer-id 'tabbar-unselected-highlight frame))
-        (unless (face-differs-from-default-p 'tabbar-selected-highlight)
+        (unless (tabbar-diff-face-p 'tabbar-selected-highlight)
 	  (copy-face 'mode-line-inactive 'tabbar-selected-highlight frame)))
-    (unless (face-differs-from-default-p 'tabbar-selected)
+    (unless (tabbar-diff-face-p 'tabbar-selected)
       (copy-face 'default 'tabbar-selected frame))
-    (unless (face-differs-from-default-p 'tabbar-unselected)
+    (unless (tabbar-diff-face-p 'tabbar-unselected)
       (copy-face 'shadow 'tabbar-unselected frame))
 
     (if tabbar-ruler-invert-deselected
-	(unless (face-differs-from-default-p 'tabbar-unselected)
+	(unless (tabbar-diff-face-p 'tabbar-unselected)
 	  (copy-face 'tabbar-selected 'tabbar-unselected)
 	  (set-face-attribute 'tabbar-unselected frame)
 	  (invert-face 'tabbar-unselected))
-      (unless (face-differs-from-default-p 'tabbar-unselected)
+      (unless (tabbar-diff-face-p 'tabbar-unselected)
 	(set-face-attribute 'tabbar-unselected frame
 			    :inherit 'mode-line-buffer-id
 			    :background (face-attribute 'mode-line-inactive :background))))
 
 
-    (unless (face-differs-from-default-p 'tabbar-selected-highlight)
+    (unless (tabbar-diff-face-p 'tabbar-selected-highlight)
       (copy-face 'mode-line-buffer-id 'tabbar-selected-highlight frame))
-    (unless (face-differs-from-default-p 'tabbar-unselected-highlight)
+    (unless (tabbar-diff-face-p 'tabbar-unselected-highlight)
       (copy-face 'mode-line-inactive 'tabbar-unselected-highlight frame)))
 
-  (unless (face-differs-from-default-p 'tabbar-separator)
+  (unless (tabbar-diff-face-p 'tabbar-separator)
     (set-face-attribute 'tabbar-separator frame
 			:inherit 'tabbar-default))
 
-  (unless (face-differs-from-default-p 'tabbar-button)
+  (unless (tabbar-diff-face-p 'tabbar-button)
     (set-face-attribute 'tabbar-button frame
 			:inherit 'tabbar-default))
   (dolist (face '(tabbar-button
@@ -953,13 +957,13 @@ This copies the :family and :foundry from the `variable-pitch' face."
 		  tabbar-unselected
 		  tabbar-unselected-highlight
 		  tabbar-unselected-modified))
-    (unless (face-differs-from-default-p face)
+    (unless (tabbar-diff-face-p face)
       (set-face-attribute face frame
 			  :box nil
 			  :height (face-attribute 'default :height frame)
 			  :width (face-attribute 'default :width frame)))
     (when tabbar-ruler-use-variable-pitch
-      (unless (face-differs-from-default-p face)
+      (unless (tabbar-diff-face-p face)
 	(set-face-attribute face frame
 			    :family (face-attribute 'variable-pitch :family)
 			    :foundry (face-attribute 'variable-pitch :foundry)))))
