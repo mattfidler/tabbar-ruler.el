@@ -854,7 +854,12 @@ This copies the :family and :foundry from the `variable-pitch' face."
 
 (defun tabbar-diff-face-p (face)
   "Is FACE customized?"
-  (and (facep face) (face-differs-from-default-p face)))
+  (and (facep face)
+       (or (and (custom-facep face)
+		(or (get face 'saved-value)
+		    (get face 'saved-face)
+		    (get face 'saved-face-comment)))
+	   (ignore-errors (not (eq (default-value face) face))))))
 
 (defun tabbar-ruler-style-firefox (&optional frame)
   "Setup firefox style for FRAME."
