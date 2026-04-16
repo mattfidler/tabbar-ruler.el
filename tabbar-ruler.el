@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; tabbar-ruler.el --- Pretty tabbar, autohide, use both tabbar/ruler
 ;;
 ;; Filename: tabbar-ruler.el
