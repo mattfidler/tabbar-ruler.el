@@ -2128,7 +2128,7 @@ The return value is the value of the last form in BODY.
 
 This was stole/modified from `c-save-buffer-state'"
   `(let* ((modified (buffer-modified-p)) (buffer-undo-list t)
-          (inhibit-read-only t) (inhibit-point-motion-hooks t)
+          (inhibit-read-only t) (cursor-intangible-mode t)
           before-change-functions after-change-functions
           deactivate-mark
           buffer-file-name buffer-file-truename ; Prevent primitives checking
