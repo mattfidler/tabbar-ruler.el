@@ -820,7 +820,7 @@ be \"Could not gzip the file!\"."
                            (format "%02X" (* val 255)))
                          (color-name-to-rgb color) ""))))
      (t (setq ret "None")))
-    (symbol-value 'ret)))
+    ret))
 
 (defcustom tabbar-ruler-swap-faces nil
   "Swap the selected / unselected tab colors."
